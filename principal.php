@@ -61,7 +61,7 @@ $bases = $consulta->fetch(PDO::FETCH_ASSOC);
 
     <!-- Botón para acceder a la votación -->
     <div class="my-4">
-    <a class="btn btn-success" href="./votaciones/votoIP.php">Entra a la galería para votar</a>
+        <a class="btn btn-success" href="./votaciones/votoIP.php">Entra a la galería para votar</a>
 
     </div>
 
@@ -72,18 +72,27 @@ $bases = $consulta->fetch(PDO::FETCH_ASSOC);
             <img src="./imgPortada/imagen.jpg" alt="imagen" class="card-img-top img-fluid rounded"
                 style="max-height: 400px; object-fit: cover;">
         </div>
+        <br>
+   
     </div>
 
     <!-- Sección con las bases del concurso -->
     <div class="container mb-5" id="bases">
-        <div class="card p-4 shadow-sm">
-            <h2 class="mb-4">Reglas del concurso</h2>
+            <div class="card p-4 shadow-sm" style="max-width: 600px; margin: 0 auto;">
+
+
+            <h4 class="mb-4">Reglas del concurso</h4>
+
             <!-- Datos extraídos dinámicamente desde la base de datos -->
             <p><strong>Máximo de fotos por persona:</strong> <?= $bases['max_fotos'] ?></p>
+            <p><strong>Tamaño máximo de foto:</strong> 2MB</p>
             <p><strong>Inicio de participación:</strong> <?= $bases['fecha_inicio'] ?></p>
             <p><strong>Fin de participación:</strong> <?= $bases['fecha_fin'] ?></p>
             <p><strong>Inicio de votaciones:</strong> <?= $bases['fecha_votacion'] ?></p>
+                <a class="btn btn-success" href="./registro.php" style="max-width: 300px; margin: 0 auto;">Regístrate para participar! 📸</a>
+
         </div>
+        
     </div>
 
     <!-- Carga del JS de Bootstrap (necesario para menú responsive y otros componentes) -->

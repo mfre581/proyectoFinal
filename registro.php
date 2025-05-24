@@ -17,6 +17,7 @@ $errores = [];
 $email = $_POST["email"] ?? "";
 $contrasena = $_POST["password"] ?? "";
 $nombre = $_POST["nombre"] ?? "";
+$apellido = $_POST["apellido"] ?? "";
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -41,11 +42,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $passwordHash = password_hash($contrasena, PASSWORD_DEFAULT);
 
             // Preparar la consulta para insertar el nuevo usuario
-            $insert = "INSERT INTO usuarios (nombre, email, password, created_at, updated_at)
-                       VALUES (:nombre, :email, :password, NOW(), NOW())";
+            $insert = "INSERT INTO usuarios (nombre, apellido, email, password, created_at, updated_at)
+                       VALUES (:nombre, :apellido, :email, :password, NOW(), NOW())";
 
             $insert_usuario = $conexion->prepare($insert);
             $insert_usuario->bindParam(':nombre', $nombre);
+            $insert_usuario->bindParam(':apellido', $apellido);
             $insert_usuario->bindParam(':email', $email);
             $insert_usuario->bindParam(':password', $passwordHash);
 
@@ -68,25 +70,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 <head>
     <meta charset="UTF-8">
-    <title>Registro - Rally Fotográfico</title>
+    <title>Registro</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- Carga de CSS de Bootstrap desde CDN -->
+    <!-- Link al archivo css que aplica parte del estilo -->
+    <link rel="stylesheet" href="./css/estilo.css">
+    <!-- Carga de Bootstrap desde CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
-<body class="bg-light">
+<body class="bg-light d-flex justify-content-center align-items-center min-vh-100">
 
-    <!-- Navbar Bootstrap -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
-        <div class="container">
-            <a class="navbar-brand fs-1 fw-bold" href="./principal.php">Rally Fotográfico</a>
-            <a href="./principal.php" class="btn btn-outline-light">Volver</a>
-        </div>
-    </nav>
+    <!-- Contenedor principal en forma de tarjeta -->
+    <div class="card shadow p-4" style="max-width: 480px; width: 100%;">
 
-    <div class="container">
-        <!-- Contenedor central -->
-        <div class="card p-4 shadow-sm mx-auto" style="max-width: 480px;">
+        <!-- Barra de navegación sencilla -->
+        <nav class="navbar navbar-dark" style="background-color: rgb(9, 18, 62); border-radius: 0.375rem 0.375rem 0 0;">
+            <div class="container-fluid">
+                <a class="navbar-brand fs-3 fw-bold" href="./principal.php">Retales Urbanos</a>
+                <a href="./principal.php" class="btn btn-outline-light btn-sm">Volver</a>
+            </div>
+        </nav>
+
+        <!-- Contenido de la tarjeta -->
+        <div class="mt-4">
+
             <h2 class="mb-4 text-center">Registro</h2>
 
             <!-- Mostrar errores si existen -->
@@ -101,14 +108,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <?php endif; ?>
 
             <!-- Formulario de registro -->
-            <form action="" method="POST">
+            <form action="" method="POST" novalidate>
                 <div class="mb-3">
                     <label for="nombre" class="form-label">Nombre:</label>
-                    <input type="text" class="form-control" name="nombre" id="nombre" required value="<?= htmlspecialchars($nombre) ?>">
+                    <input type="text" class="form-control" name="nombre" id="nombre" required
+                        value="<?= htmlspecialchars($nombre) ?>">
+                </div>
+                <div class="mb-3">
+                    <label for="apellido" class="form-label">Apellido:</label>
+                    <input type="text" class="form-control" name="apellido" id="apellido" required
+                        value="<?= htmlspecialchars($apellido) ?>">
                 </div>
                 <div class="mb-3">
                     <label for="email" class="form-label">Correo electrónico:</label>
-                    <input type="email" class="form-control" name="email" id="email" required value="<?= htmlspecialchars($email) ?>">
+                    <input type="email" class="form-control" name="email" id="email" required
+                        value="<?= htmlspecialchars($email) ?>">
                 </div>
                 <div class="mb-3">
                     <label for="password" class="form-label">Contraseña:</label>
@@ -120,7 +134,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </div>
     </div>
 
-    <!-- Script de Bootstrap para funcionalidades como menú responsive -->
+    <!-- Bootstrap JS para funcionalidades como menú responsive -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>

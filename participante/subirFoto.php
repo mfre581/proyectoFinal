@@ -1,9 +1,14 @@
 <?php
-// Incluye variables y funciones necesarias para la conexión y utilidades
+/* PAGINA DE SUBIDAS DE FOTOGRAFÍAS
+ * @author: Michel Freymann
+ * Permite al participante seleccionar una foto, editarla y subirla.
+ * Tras la subida, se muestra en su galería, y queda a la espera de ser aprobada por el admin para poder ser votada
+ * en la galería principal del concurso.
+ */
+
+// Inclusión de variables,funciones y abrimos sesión
 require_once("../utiles/variables.php");
 require_once("../utiles/funciones.php");
-
-// Inicia sesión para manejar usuario autenticado
 session_start();
 
 // Si no hay usuario logueado, redirige a página principal

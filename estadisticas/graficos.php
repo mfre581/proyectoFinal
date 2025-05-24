@@ -14,8 +14,11 @@ session_start();
 
 $conexion = conectarPDO($host, $user, $password, $bbdd);
 
-// Obtenemos todas las fotos aprobadas con sus votos
-$consulta = "SELECT foto_id, usuario_id, imagen, tipo_imagen, votos FROM fotografias WHERE estado = 'aprobada'";
+// Obtenemos todas las fotos aprobadas con sus votos y datos del usuario (nombre, apellido)
+$consulta = "SELECT f.foto_id, f.usuario_id, f.imagen, f.tipo_imagen, f.votos, u.nombre, u.apellido 
+             FROM fotografias f
+             JOIN usuarios u ON f.usuario_id = u.usuario_id
+             WHERE f.estado = 'aprobada'";
 $consulta = $conexion->prepare($consulta);
 $consulta->execute();
 $fotos = $consulta->fetchAll(PDO::FETCH_ASSOC);
@@ -36,6 +39,8 @@ foreach ($fotosProcesadas as $foto) {
     $labels[] = "Foto " . $foto['foto_id'];
     $votos[] = $foto['votos'];
 }
+
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -44,61 +49,65 @@ foreach ($fotosProcesadas as $foto) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Estadísticas</title>
-
+    <!-- Link al archivo css que aplica parte del estilo -->
+    <link rel="stylesheet" href="../css/estilo.css">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Chart.js para gráficos -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
-<body class="bg-light">
+<body class="bg-light d-flex justify-content-center align-items-center min-vh-100 fondo1">
 
-    <!-- Barra de navegación -->
-    <nav class="navbar navbar-dark bg-dark mb-4 p-3">
-        <div class="container-fluid">
-            <a class="navbar-brand fs-3 fw-bold" href="#">Estadísticas</a>
-            <a href="../votaciones/votoIP.php" class="btn btn-outline-light">Ir a votaciones</a>
-        </div>
-    </nav>
+    <!-- Contenedor principal en forma de tarjeta -->
+    <div class="card shadow p-4" style="max-width: 900px; width: 100%;">
 
-    <div class="container">
+        <!-- Barra de navegación -->
+        <nav class="navbar navbar-dark">
+            <div class="container-fluid">
+                <h1 class="text-light fs-2 my-0">Estadísticas</h1>
+                <a href="../votaciones/votoIP.php" class="btn btn-outline-light">Volver</a>
+            </div>
+        </nav>
 
-        <!-- Galería de fotos con votos -->
-        <h2 class="mb-4 text-center">Fotos y votos actuales</h2>
-        <?php if ($fotosProcesadas): ?>
-            <div class="row justify-content-center">
-                <?php foreach ($fotosProcesadas as $foto): ?>
-                    <div class="col-md-3 mb-4 text-center">
-                        <div class="card shadow-sm">
-                            <img src="<?= $foto['imagen'] ?>" class="card-img-top" alt="Foto <?= $foto['foto_id'] ?>">
-                            <div class="card-body">
-                                <p class="card-text"><strong>ID:</strong> <?= $foto['foto_id'] ?></p>
-                                <p class="card-text"><strong>Votos:</strong> <?= $foto['votos'] ?></p>
+        <div class="container">
+
+            <!-- Galería de fotos con votos -->
+            <h2 class="mb-4 text-center">Fotos y votos actuales</h2>
+            <?php if ($fotosProcesadas): ?>
+                <div class="row justify-content-center">
+                    <?php foreach ($fotosProcesadas as $foto): ?>
+                        <div class="col-md-3 mb-4 text-center">
+                            <div class="card shadow-sm">
+                                <img src="<?= $foto['imagen'] ?>" class="card-img-top" alt="Foto <?= $foto['foto_id'] ?>">
+                                <div class="card-body">
+                                    <p class="card-text"><?= htmlspecialchars($foto['nombre'] . ' ' . $foto['apellido']) ?></p>
+                                    <p class="card-text"><strong>Votos:</strong> <?= $foto['votos'] ?></p>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                <?php endforeach; ?>
+                    <?php endforeach; ?>
+                </div>
+            <?php else: ?>
+                <div class="alert alert-warning">No hay fotos aprobadas para mostrar.</div>
+            <?php endif; ?>
+
+            <!-- Gráfico de votos -->
+            <h2 class="mt-5 text-center" id="grafico">Gráfico de votaciones</h2>
+
+            <div class="my-4 d-flex justify-content-center">
+                <div style="width: 100%; max-width: 800px; height: 400px;">
+                    <canvas id="graficoVotos"></canvas>
+                </div>
             </div>
-        <?php else: ?>
-            <div class="alert alert-warning">No hay fotos aprobadas para mostrar.</div>
-        <?php endif; ?>
 
-        <!-- Gráfico de votos -->
-        <h2 class="mt-5 text-center" id="grafico">Gráfico de votaciones</h2>
-
-        <div class="my-4 d-flex justify-content-center">
-            <div style="width: 100%; max-width: 800px; height: 400px;">
-                <canvas id="graficoVotos"></canvas>
+            <!-- Botón de volver arriba -->
+            <div class="text-center my-5">
+                <a href="#top" class="btn btn-success">Volver arriba</a>
             </div>
-        </div>
 
-        <!-- Botón de volver arriba -->
-        <div class="text-center my-5">
-            <a href="#top" class="btn btn-warning btn-lg">Volver arriba</a>
         </div>
-
     </div>
-
     <!-- Script para generar el gráfico con Chart.js -->
     <script>
         const ctx = document.getElementById('graficoVotos').getContext('2d');

@@ -78,13 +78,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
-<body class="bg-light d-flex justify-content-center align-items-center min-vh-100">
+<body class="bg-light d-flex justify-content-center align-items-center min-vh-100 fondo1">
+
 
     <!-- Contenedor principal en forma de tarjeta -->
     <div class="card shadow p-4" style="max-width: 480px; width: 100%;">
 
-        <!-- Barra de navegación sencilla -->
-        <nav class="navbar navbar-dark" style="background-color: rgb(9, 18, 62); border-radius: 0.375rem 0.375rem 0 0;">
+        <!-- Barra de navegación -->
+        <nav class="navbar navbar-dark">
             <div class="container-fluid">
                 <a class="navbar-brand fs-3 fw-bold" href="./principal.php">Retales Urbanos</a>
                 <a href="./principal.php" class="btn btn-outline-light btn-sm">Volver</a>

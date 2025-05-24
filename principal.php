@@ -30,17 +30,15 @@ $bases = $consulta->fetch(PDO::FETCH_ASSOC);
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Carga de Bootstrap desde CDN (estilos) -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-
 </head>
 
-<body class="bg-light d-flex justify-content-center align-items-center min-vh-100">
+<body class="bg-light d-flex justify-content-center align-items-center min-vh-100 fondo1">
 
     <!-- Contenedor principal en forma de tarjeta -->
     <div class="card shadow p-4" style="max-width: 900px; width: 100%;">
 
         <!-- Barra de navegación superior -->
-        <nav class="navbar navbar-expand-lg navbar-dark" style="background-color:rgb(9, 18, 62);">
+        <nav class="navbar navbar-expand-lg navbar-dark">
             <div class="container">
                 <!-- Título destacado del sitio -->
                 <span class="navbar-brand fs-1 fw-bold mx-auto">Retales Urbanos</span>

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PÁGINA DE VOTACIONES
  * @author: Michel Freymann
@@ -34,8 +35,8 @@ foreach ($fotos as $foto) {
 function obtenerIP()
 {
     return $_SERVER['HTTP_CLIENT_IP'] ??
-           $_SERVER['HTTP_X_FORWARDED_FOR'] ??
-           $_SERVER['REMOTE_ADDR'];
+        $_SERVER['HTTP_X_FORWARDED_FOR'] ??
+        $_SERVER['REMOTE_ADDR'];
 }
 
 //Asignamos la ip del usuario para poder identificarlo
@@ -59,26 +60,25 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['fotoVotada'])) {
 
         // Reducir voto de la foto anterior
         $conexion->prepare("UPDATE fotografias SET votos = votos - 1 WHERE foto_id = :id")
-                 ->execute(['id' => $fotoVotada]);
+            ->execute(['id' => $fotoVotada]);
 
         // Aumentar voto a nueva foto
         $conexion->prepare("UPDATE fotografias SET votos = votos + 1 WHERE foto_id = :id")
-                 ->execute(['id' => $nuevaFotoId]);
+            ->execute(['id' => $nuevaFotoId]);
 
         // Actualizar IP con nueva foto_id
         $conexion->prepare("UPDATE ip_votos SET foto_id = :nueva WHERE direccionIP = :ip")
-                 ->execute(['nueva' => $nuevaFotoId, 'ip' => $ip_usuario]);
+            ->execute(['nueva' => $nuevaFotoId, 'ip' => $ip_usuario]);
 
         echo "<script>alert('Has cambiado tu voto.'); window.location.href='votoIP.php';</script>";
         exit();
-
     } else {
         // Primer voto
         $conexion->prepare("UPDATE fotografias SET votos = votos + 1 WHERE foto_id = :id")
-                 ->execute(['id' => $nuevaFotoId]);
+            ->execute(['id' => $nuevaFotoId]);
 
         $conexion->prepare("INSERT INTO ip_votos (direccionIP, foto_id) VALUES (:ip, :foto_id)")
-                 ->execute(['ip' => $ip_usuario, 'foto_id' => $nuevaFotoId]);
+            ->execute(['ip' => $ip_usuario, 'foto_id' => $nuevaFotoId]);
 
         echo "<script>alert('¡Gracias por tu voto!'); window.location.href='votoIP.php';</script>";
         exit();
@@ -87,66 +87,109 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['fotoVotada'])) {
 ?>
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-    <meta charset="UTF-8">
-    <title>Votaciones</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../css/cssindex.css">
+    <meta charset="UTF-8" />
+    <title>Votaciones - Rally Fotográfico</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../css/estilo.css" />
+    <style>
+        /* Cursor pointer para las imágenes en tarjetas */
+        .foto-card-img {
+            cursor: pointer;
+            object-fit: cover;
+            height: 300px;
+            width: 100%;
+        }
+    </style>
 </head>
-<body>
 
-<nav class="navbar navbar-dark bg-dark px-3">
-    <h1 class="text-light">Galería</h1>
-    <a href="../principal.php" class="btn btn-outline-light">Volver</a>
-</nav>
+<body class="bg-light d-flex justify-content-center align-items-center min-vh-100 fondo1">
 
-  <!-- Botón para ir a la página de estadísticas -->
-<div class="text-center mt-3">
-    <a class="btn btn-success" href="../estadisticas/graficos.php">Ver estadísticas de las votaciones</a>
-</div>
+    <!-- Contenedor principal en forma de tarjeta -->
+    <div class="card shadow p-4" style="max-width: 900px; width: 100%;">
 
-    <!-- Contenedor principal con las fotos para votar -->
-<div class="container mt-4">
-    <?php if ($fotosProcesadas): ?>
-      <div class="row justify-content-center">
-                <!-- Recorremos todas las fotos aprobadas -->
-                <?php foreach ($fotosProcesadas as $foto): ?>
-                    <div class="col-md-8 mb-5 text-center">
-                        <!-- Mostrar la imagen con estilos para que sea responsiva y con borde -->
-                        <img src="<?= $foto['imagen'] ?>" alt="Foto participante"
-                            class="img-fluid rounded border shadow-sm"
-                            style="max-height: 500px; width: auto;">
-
-                        <!-- Mostrar botón diferente si la foto fue votada por esta IP -->
-                        <?php if ($foto['foto_id'] == $fotoVotada): ?>
-                            <div class="mt-3">
-                                <!-- Botón deshabilitado indicando que ya votaste esta foto -->
-                                <button class="btn" disabled style="background-color: #e83e8c; color: white; border: none;">Votaste por esta foto</button>
-                            </div>
-                        <?php else: ?>
-                            <!-- Formulario para votar la foto -->
-                            <form method="POST" class="mt-3">
-                                <input type="hidden" name="fotoVotada" value="<?= $foto['foto_id'] ?>">
-                                <button type="submit" class="btn btn-primary">Votar esta foto</button>
-                            </form>
-                        <?php endif; ?>
-                    </div>
-                <?php endforeach; ?>
+        <!-- Barra de navegación -->
+        <nav class="navbar navbar-dark">
+            <div class="container-fluid">
+                  <h1 class="text-light fs-2 my-0">Galería</h1>
+                <a href="../principal.php" class="btn btn-outline-light btn-sm">Volver</a>
             </div>
-        <?php else: ?>
-            <!-- Mensaje si no hay fotos para votar -->
-            <p class="text-center">No hay fotos disponibles en este momento.</p>
-        <?php endif; ?>
+        </nav>
 
-        <!-- Botón para volver arriba de la página -->
-        <div class="text-center my-5">
-            <a href="#top" class="btn btn-warning btn-lg">Volver arriba</a>
+        <!-- Botón para ir a la página de estadísticas -->
+        <div class="text-center mt-3">
+            <a class="btn btn-success" href="../estadisticas/graficos.php">Ver estadísticas de las votaciones</a>
         </div>
-    </div>
 
-    <!-- Script de Bootstrap para funcionalidades JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Contenedor principal con tarjetas -->
+        <div class="container my-4">
+            <?php if ($fotosProcesadas): ?>
+                <div class="row g-4 justify-content-center">
+                    <?php foreach ($fotosProcesadas as $foto): ?>
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                            <div class="card shadow-sm h-100">
+                                <!-- Imagen clicable para abrir modal -->
+                                <img src="<?= $foto['imagen'] ?>" alt="Foto participante"
+                                    class="card-img-top foto-card-img"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#modalFoto"
+                                    data-foto="<?= htmlspecialchars($foto['imagen'], ENT_QUOTES) ?>"
+                                    data-alt="Foto participante">
+
+                                <div class="card-body d-flex flex-column">
+                                    <?php if ($foto['foto_id'] == $fotoVotada): ?>
+                                        <button class="btn btn-pink disabled mt-auto" style="background-color: #e83e8c; color: white; border: none;">
+                                            Votaste por esta foto
+                                        </button>
+                                    <?php else: ?>
+                                        <form method="POST" class="mt-auto">
+                                            <input type="hidden" name="fotoVotada" value="<?= $foto['foto_id'] ?>">
+                                            <button type="submit" class="btn btn-primary w-100">Votar esta foto</button>
+                                        </form>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            <?php else: ?>
+                <p class="text-center">No hay fotos disponibles en este momento.</p>
+            <?php endif; ?>
+        </div>
+
+        <!-- Modal para mostrar la foto grande -->
+        <div class="modal fade" id="modalFoto" tabindex="-1" aria-labelledby="modalFotoLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content bg-dark">
+                    <div class="modal-header border-0">
+                        <h5 class="modal-title text-white" id="modalFotoLabel">Foto ampliada</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <img src="" alt="" id="modalImagen" class="img-fluid rounded" style="max-height: 80vh; width: auto;">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bootstrap JS y script para actualizar la imagen del modal -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            // Cuando se abre el modal, cambiamos la imagen según la que se clicó
+            const modalFoto = document.getElementById('modalFoto')
+            const modalImagen = document.getElementById('modalImagen')
+
+            modalFoto.addEventListener('show.bs.modal', event => {
+                const imagenClicada = event.relatedTarget
+                const src = imagenClicada.getAttribute('data-foto')
+                const alt = imagenClicada.getAttribute('data-alt')
+                modalImagen.src = src
+                modalImagen.alt = alt
+            })
+        </script>
+    </div>
 </body>
 
 </html>

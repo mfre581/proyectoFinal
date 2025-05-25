@@ -35,11 +35,17 @@ foreach ($fotos as $foto) {
 // Preparamos los datos para el gráfico
 $labels = [];
 $votos = [];
+
 foreach ($fotosProcesadas as $foto) {
-    $labels[] = "Foto " . $foto['foto_id'];
+    // Consulta para obtener nombre y apellido del usuario
+    $consultaUsuario = $conexion->prepare("SELECT nombre, apellido FROM usuarios WHERE usuario_id = :usuario_id");
+    $consultaUsuario->execute(['usuario_id' => $foto['usuario_id']]);
+    $usuario = $consultaUsuario->fetch(PDO::FETCH_ASSOC);
+
+    // Agregar nombre completo al label
+    $labels[] = $usuario ? $usuario['nombre'] . ' ' . $usuario['apellido'] : 'Usuario desconocido';
     $votos[] = $foto['votos'];
 }
-
 
 ?>
 <!DOCTYPE html>
@@ -62,18 +68,41 @@ foreach ($fotosProcesadas as $foto) {
     <!-- Contenedor principal en forma de tarjeta -->
     <div class="card shadow p-4" style="max-width: 900px; width: 100%;">
 
-        <!-- Barra de navegación -->
+      
+        <!-- Barra de navegación 
         <nav class="navbar navbar-dark">
             <div class="container-fluid">
                 <h1 class="text-light fs-2 my-0">Estadísticas</h1>
                 <a href="../votaciones/votoIP.php" class="btn btn-outline-light">Volver</a>
             </div>
+        </nav>-->
+
+          <!-- Barra de navegación superior -->
+        <nav class="navbar navbar-expand-lg navbar-dark">
+            <div class="container">
+                <!-- Título destacado del sitio -->
+                    <h1 class="text-light fs-2 my-0">Estadísticas</h1>
+
+                <!-- Botón para móviles (hamburguesa) -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Menú de navegación colapsable -->
+                <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item"><a class="nav-link" href="#grafico">Gráfico</a></li>
+                        <li class="nav-item"><a class="nav-link" href="../votaciones/votoIP.php">Volver a galería</a></li>
+                    </ul>
+                </div>
+            </div>
         </nav>
+
 
         <div class="container">
 
             <!-- Galería de fotos con votos -->
-            <h2 class="mb-4 text-center">Fotos y votos actuales</h2>
+            <h2 class="m-4 text-center">Fotos y votos actuales</h2>
             <?php if ($fotosProcesadas): ?>
                 <div class="row justify-content-center">
                     <?php foreach ($fotosProcesadas as $foto): ?>

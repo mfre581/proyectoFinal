@@ -37,40 +37,36 @@ $nombre = $consulta->fetchColumn();
     <meta charset="UTF-8" />
     <title>Área Administrador</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-
+    <!-- Link al archivo css que aplica parte del estilo -->
+    <link rel="stylesheet" href="../css/estilo.css">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
 </head>
 
-<body class="bg-light text-center">
+<body class="bg-light d-flex justify-content-center align-items-center min-vh-100 fondo2">
 
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <span class="navbar-brand fs-1 fw-bold">Área de Administrador</span>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarAdmin">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+    <!-- Contenedor principal en forma de tarjeta -->
+    <div class="card shadow p-4" style="max-width: 900px; width: 100%;">
 
-            <div class="collapse navbar-collapse justify-content-end" id="navbarAdmin">
-                <span class="navbar-text text-white fs-4 me-3">
-                    Bienvenido, <?= htmlspecialchars($nombre) ?>
-                </span>
+        <!-- Barra de navegación -->
+        <nav class="navbar navbar-dark">
+            <div class="container-fluid">
+                <h2 class="text-light fs-2 my-0">Bienvenid@, <?= htmlspecialchars($nombre) ?></h2>
                 <a href="../cerrarSesion/cerrar_sesion.php" class="btn btn-outline-light">Cerrar sesión</a>
             </div>
-        </div>
-    </nav>
+        </nav>
 
-    <!-- Contenido principal -->
-    <main class="container my-5">
-        <h3 class="mb-4">Elige qué deseas hacer</h3>
-        <div class="d-grid gap-3 col-6 mx-auto">
-            <a href="./gestionFotos.php" class="btn btn-primary btn-lg">Gestionar estado de fotografías</a>
-            <a href="./gestionUsuarios.php" class="btn btn-success btn-lg">Gestionar usuarios</a>
-            <a href="./gestionBases.php" class="btn btn-warning btn-lg">Modificar bases del concurso</a>
-        </div>
-    </main>
+        <!-- Contenido principal -->
+        <main class="container my-5">
+            <h3 class="mb-5">Elige qué deseas hacer</h3>
+            <div class="d-grid gap-3 col-6 mx-auto">
+                <a href="./gestionFotos.php" class="btn btn-primary btn-lg">Gestionar estado de fotografías</a>
+                <a href="./gestionUsuarios.php" class="btn btn-success btn-lg">Gestionar usuarios</a>
+                <a href="./gestionBases.php" class="btn btn-warning btn-lg">Modificar bases del concurso</a>
+            </div>
+        </main>
 
+    </div>
     <!-- Bootstrap JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 

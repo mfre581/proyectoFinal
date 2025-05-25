@@ -21,6 +21,7 @@ $errores = [];
 $email = $_POST["email"] ?? "";
 $clave = $_POST["password"] ?? "";
 $nombre = $_POST["nombre"] ?? "";
+$apellido = $_POST["apellido"] ?? "";
 $rol = $_POST["rol"] ?? "";
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -46,11 +47,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $passwordHash = password_hash($clave, PASSWORD_DEFAULT);
 
             // Preparar la consulta de inserción
-            $insert = "INSERT INTO usuarios (nombre, email, rol, password, created_at, updated_at)
-                       VALUES (:nombre, :email, :rol, :password, NOW(), NOW())";
+            $insert = "INSERT INTO usuarios (nombre, apellido, email, rol, password, created_at, updated_at)
+                       VALUES (:nombre, :apellido, :email, :rol, :password, NOW(), NOW())";
 
             $insert_usuario = $conexion->prepare($insert);
             $insert_usuario->bindParam(':nombre', $nombre);
+            $insert_usuario->bindParam(':apellido', $apellido);
             $insert_usuario->bindParam(':email', $email);
             $insert_usuario->bindParam(':rol', $rol);
             $insert_usuario->bindParam(':password', $passwordHash);
@@ -76,15 +78,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta charset="UTF-8" />
     <title>Nuevo usuario</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-
+    <!-- Link al archivo css que aplica parte del estilo -->
+    <link rel="stylesheet" href="../css/estilo.css">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
 </head>
 
-<body class="bg-light">
+<body class="bg-light d-flex justify-content-center align-items-center min-vh-100 fondo2">
+
+    <!-- Contenedor principal en forma de tarjeta -->
+    <div class="card shadow p-4" style="max-width: 480px; width: 100%;">
 
      <!-- Navbar con título y botón para volver -->
-    <nav class="navbar navbar-dark bg-dark">
+    <nav class="navbar navbar-dark">
         <div class="container">
             <span class="navbar-brand fs-3 fw-bold">Añadir usuario</span>
             <a href="./administrador.php" class="btn btn-outline-light">Volver</a>
@@ -115,6 +121,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     value="<?= htmlspecialchars($nombre) ?>">
             </div>
 
+             <div class="mb-3">
+                <label for="apellido" class="form-label">Apellido:</label>
+                <input type="text" name="apellido" id="apellido" class="form-control" required
+                    value="<?= htmlspecialchars($apellido) ?>">
+            </div>
+
             <div class="mb-3">
                 <label for="email" class="form-label">Correo electrónico:</label>
                 <input type="email" name="email" id="email" class="form-control" required
@@ -135,13 +147,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
 
             <div class="d-grid">
-                <button type="submit" class="btn btn-success btn-lg">Registrarse</button>
+                <button type="submit" class="btn btn-primary">Registrarse</button>
             </div>
 
         </form>
 
     </main>
-
+    </div>
     <!-- Bootstrap JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 

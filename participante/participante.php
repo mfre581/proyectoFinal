@@ -36,12 +36,10 @@ $nombre = $consulta->fetchColumn();
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Área de Participante</title>
-
+    <!-- Link al archivo css que aplica parte del estilo -->
+    <link rel="stylesheet" href="../css/estilo.css">
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Estilo personalizado -->
-    <link rel="stylesheet" type="text/css" href="../css/cssindex.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
 </head>
 
 <body class="bg-light">
@@ -57,7 +55,7 @@ $nombre = $consulta->fetchColumn();
 
             <div class="collapse navbar-collapse justify-content-end" id="navbarParticipante">
                 <span class="navbar-text text-white fs-4 me-3">
-                    Bienvenido, <?= htmlspecialchars($nombre) ?>
+                    Bienvenid@, <?= htmlspecialchars($nombre) ?>
                 </span>
                 <a href="../cerrarSesion/cerrar_sesion.php" class="btn btn-outline-light">Cerrar sesión</a>
             </div>

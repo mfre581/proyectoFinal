@@ -90,10 +90,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['fotoVotada'])) {
 
 <head>
     <meta charset="UTF-8" />
-    <title>Votaciones - Rally Fotográfico</title>
+    <title>Votaciones</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Link al archivo css que aplica parte del estilo -->
     <link rel="stylesheet" href="../css/estilo.css" />
+    <!-- Carga de Bootstrap desde CDN (estilos) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+
     <style>
         /* Cursor pointer para las imágenes en tarjetas */
         .foto-card-img {
@@ -113,7 +116,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['fotoVotada'])) {
         <!-- Barra de navegación -->
         <nav class="navbar navbar-dark">
             <div class="container-fluid">
-                  <h1 class="text-light fs-2 my-0">Galería</h1>
+                <h1 class="text-light fs-2 my-0">Galería</h1>
                 <a href="../principal.php" class="btn btn-outline-light btn-sm">Volver</a>
             </div>
         </nav>
@@ -174,22 +177,23 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['fotoVotada'])) {
             </div>
         </div>
 
-        <!-- Bootstrap JS y script para actualizar la imagen del modal -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-        <script>
-            // Cuando se abre el modal, cambiamos la imagen según la que se clicó
-            const modalFoto = document.getElementById('modalFoto')
-            const modalImagen = document.getElementById('modalImagen')
-
-            modalFoto.addEventListener('show.bs.modal', event => {
-                const imagenClicada = event.relatedTarget
-                const src = imagenClicada.getAttribute('data-foto')
-                const alt = imagenClicada.getAttribute('data-alt')
-                modalImagen.src = src
-                modalImagen.alt = alt
-            })
-        </script>
     </div>
+
+    <!-- Bootstrap JS y script para actualizar la imagen del modal -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Cuando se abre el modal, cambiamos la imagen según la que se clicó
+        const modalFoto = document.getElementById('modalFoto')
+        const modalImagen = document.getElementById('modalImagen')
+
+        modalFoto.addEventListener('show.bs.modal', event => {
+            const imagenClicada = event.relatedTarget
+            const src = imagenClicada.getAttribute('data-foto')
+            const alt = imagenClicada.getAttribute('data-alt')
+            modalImagen.src = src
+            modalImagen.alt = alt
+        })
+    </script>
 </body>
 
 </html>

@@ -22,3 +22,17 @@
   background-position: center center; /* Centrar la imagen */
   background-attachment: fixed; /* Para que quede fija al hacer scroll (opcional) */
 }
+
+.fondo2 {
+  background-image: url("../img/suelo2.jpg");
+  background-repeat: no-repeat; /* No repetir la imagen */
+  background-size: cover; /* Que la imagen cubra todo el área */
+  background-position: center center; /* Centrar la imagen */
+  background-attachment: fixed; /* Para que quede fija al hacer scroll (opcional) */
+}
+
+thead.encabezado-tabla th {
+  /*font-family: "Merriweather", serif;*/
+  background-color: rgb(9, 18, 62);
+  color: white;
+}

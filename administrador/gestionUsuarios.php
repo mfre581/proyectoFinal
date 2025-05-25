@@ -42,7 +42,7 @@ if (isset($_GET['eliminar_id'])) {
 }
 
 // Obtener usuarios excepto el admin actual para mostrar en la tabla
-$consulta_usuarios = "SELECT usuario_id, nombre, email, rol FROM usuarios WHERE usuario_id != :usuario_id_sesion";
+$consulta_usuarios = "SELECT usuario_id, nombre, apellido, email, rol FROM usuarios WHERE usuario_id != :usuario_id_sesion";
 $stmt_usuarios = $conexion->prepare($consulta_usuarios);
 $stmt_usuarios->bindParam(':usuario_id_sesion', $usuario_id_sesion);
 $stmt_usuarios->execute();
@@ -56,15 +56,18 @@ $usuarios = $stmt_usuarios->fetchAll();
     <meta charset="UTF-8" />
     <title>Gestionar Usuarios</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-
+    <!-- Link al archivo css que aplica parte del estilo -->
+    <link rel="stylesheet" href="../css/estilo.css">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
 </head>
 
-<body class="bg-light">
+<body class="bg-light d-flex justify-content-center align-items-center min-vh-100 fondo2">
+
+    <div class="card shadow p-4" style="max-width: 900px; width: 100%;">
 
     <!-- Navbar con título y botón para volver -->
-    <nav class="navbar navbar-dark bg-dark">
+    <nav class="navbar navbar-dark">
         <div class="container">
             <span class="navbar-brand fs-3 fw-bold">Gestión de Usuarios</span>
             <a href="./administrador.php" class="btn btn-outline-light">Volver</a>
@@ -73,7 +76,7 @@ $usuarios = $stmt_usuarios->fetchAll();
 
 
     <!-- Contenedor principal -->
-    <main class="container my-5">
+    <div class="container my-5">
 
         <!-- Comprobamos si hay usuarios para mostrar -->
         <?php if ($usuarios): ?>
@@ -82,7 +85,7 @@ $usuarios = $stmt_usuarios->fetchAll();
             <!-- Tabla responsiva para listar usuarios -->
             <div class="table-responsive">
                 <table class="table table-striped table-bordered align-middle text-center">
-                    <thead class="table-dark">
+                      <thead class="encabezado-tabla">
                         <tr>
                             <th>Rol</th>
                             <th>Nombre</th>
@@ -94,7 +97,7 @@ $usuarios = $stmt_usuarios->fetchAll();
                         <?php foreach ($usuarios as $usuario): ?>
                             <tr>
                                 <td><?= htmlspecialchars($usuario['rol']) ?></td>
-                                <td><?= htmlspecialchars($usuario['nombre']) ?></td>
+                                <td><?= htmlspecialchars($usuario['nombre'] . ' ' . $usuario['apellido']) ?></td>
                                 <td><?= htmlspecialchars($usuario['email']) ?></td>
                                 <td>
                                     <!-- Botón eliminar con confirmación -->
@@ -116,11 +119,11 @@ $usuarios = $stmt_usuarios->fetchAll();
 
         <!-- Enlace para añadir nuevo usuario -->
         <div class="text-center mt-4">
-            <a href="./nuevo.php" class="btn btn-warning btn-lg">Añadir usuario</a>
+            <a href="./nuevo.php" class="btn btn-warning">Añadir usuario</a>
         </div>
 
-    </main>
-
+        </div>
+    </div>
     <!-- Bootstrap JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 

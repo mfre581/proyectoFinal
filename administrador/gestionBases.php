@@ -38,6 +38,7 @@ $errores = [];
 // Procesar envío del formulario
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $max_fotos = $_POST['max_fotos'] ?? '';
+    $max_tamano_mb = $_POST['max_tamano_mb'] ?? 2;
     $fecha_inicio = $_POST['fecha_inicio'] ?? '';
     $fecha_fin = $_POST['fecha_fin'] ?? '';
     $fecha_votacion = $_POST['fecha_votacion'] ?? '';
@@ -57,11 +58,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (empty($errores)) {
         $update = "UPDATE bases_concurso 
                    SET max_fotos = :max_fotos,
+                       max_tamano_mb = :max_tamano_mb,
                        fecha_inicio = :fecha_inicio, 
                        fecha_fin = :fecha_fin, 
                        fecha_votacion = :fecha_votacion";
         $stmt = $conexion->prepare($update);
         $stmt->bindParam(':max_fotos', $max_fotos);
+        $stmt->bindParam(':max_tamano_mb', $max_tamano_mb);
         $stmt->bindParam(':fecha_inicio', $fecha_inicio);
         $stmt->bindParam(':fecha_fin', $fecha_fin);
         $stmt->bindParam(':fecha_votacion', $fecha_votacion);
@@ -83,72 +86,87 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta charset="UTF-8" />
     <title>Gestión de Bases del Concurso</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-
+    <!-- Link al archivo css que aplica parte del estilo -->
+    <link rel="stylesheet" href="../css/estilo.css">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
 </head>
 
-<body class="bg-light">
+<body class="bg-light d-flex justify-content-center align-items-center min-vh-100 fondo2">
 
-    <!-- Navbar con título y botón para volver -->
-    <nav class="navbar navbar-dark bg-dark">
-        <div class="container">
-            <span class="navbar-brand fs-3 fw-bold">Gestión de Bases</span>
-            <a href="./administrador.php" class="btn btn-outline-light">Volver</a>
-        </div>
-    </nav>
+    <!-- Contenedor principal en forma de tarjeta -->
+    <div class="card shadow p-4" style="max-width: 480px; width: 100%;">
 
-    <!-- Contenedor principal -->
-    <main class="container my-5">
-
-        <!-- Título centrado -->
-        <h2 class="mb-4 text-center">Datos modificables</h2>
-
-        <!-- Mostrar errores si existen -->
-        <?php if (!empty($errores)): ?>
-            <div class="alert alert-danger" role="alert">
-                <ul class="mb-0">
-                    <?php foreach ($errores as $error): ?>
-                        <li><?= htmlspecialchars($error) ?></li>
-                    <?php endforeach; ?>
-                </ul>
+        <!-- Navbar con título y botón para volver -->
+        <nav class="navbar navbar-dark">
+            <div class="container">
+                <span class="navbar-brand fs-3 fw-bold">Gestión de Bases</span>
+                <a href="./administrador.php" class="btn btn-outline-light">Volver</a>
             </div>
-        <?php endif; ?>
+        </nav>
 
-        <!-- Formulario para modificar las bases -->
-        <form action="" method="POST" class="mx-auto" style="max-width: 600px;">
+        <!-- Contenedor principal -->
+        <main class="container my-5">
 
-            <div class="mb-3">
-                <label for="max_fotos" class="form-label">Máximo de fotos por persona:</label>
-                <input type="number" name="max_fotos" id="max_fotos" class="form-control" required
-                    value="<?= htmlspecialchars($base['max_fotos']) ?>" max="10" min="1">
-            </div>
+            <!-- Título centrado -->
+            <h2 class="mb-4 text-center">Datos modificables</h2>
 
-            <div class="mb-3">
-                <label for="fecha_inicio" class="form-label">Inicio de participación:</label>
-                <input type="date" name="fecha_inicio" id="fecha_inicio" class="form-control" required
-                    value="<?= htmlspecialchars($base['fecha_inicio']) ?>">
-            </div>
+            <!-- Mostrar errores si existen -->
+            <?php if (!empty($errores)): ?>
+                <div class="alert alert-danger" role="alert">
+                    <ul class="mb-0">
+                        <?php foreach ($errores as $error): ?>
+                            <li><?= htmlspecialchars($error) ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+            <?php endif; ?>
 
-            <div class="mb-3">
-                <label for="fecha_fin" class="form-label">Fin de participación:</label>
-                <input type="date" name="fecha_fin" id="fecha_fin" class="form-control" required
-                    value="<?= htmlspecialchars($base['fecha_fin']) ?>">
-            </div>
+            <!-- Formulario para modificar las bases -->
+            <form action="" method="POST" class="mx-auto" style="max-width: 600px;">
 
-            <div class="mb-3">
-                <label for="fecha_votacion" class="form-label">Inicio de votaciones:</label>
-                <input type="date" name="fecha_votacion" id="fecha_votacion" class="form-control" required
-                    value="<?= htmlspecialchars($base['fecha_votacion']) ?>">
-            </div>
+                <div class="mb-3">
+                    <label for="max_fotos" class="form-label">Máximo de fotos por persona:</label>
+                    <input type="number" name="max_fotos" id="max_fotos" class="form-control" required
+                        value="<?= htmlspecialchars($base['max_fotos']) ?>" max="10" min="1">
+                </div>
 
-            <div class="d-grid">
-                <button type="submit" class="btn btn-primary btn-lg">Actualizar bases</button>
-            </div>
+                <div class="mb-3">
+                    <label for="max_tamano_mb" class="form-label">Tamaño máximo de imagen (MB):</label>
+                    <select name="max_tamano_mb" id="max_tamano_mb" class="form-select" required>
+                        <?php for ($i = 1; $i <= 6; $i++): ?>
+                            <option value="<?= $i ?>" <?= $base['max_tamano_mb'] == $i ? 'selected' : '' ?>>
+                                <?= $i ?> MB
+                            </option>
+                        <?php endfor; ?>
+                    </select>
+                </div>
 
-        </form>
-    </main>
+                <div class="mb-3">
+                    <label for="fecha_inicio" class="form-label">Inicio de participación:</label>
+                    <input type="date" name="fecha_inicio" id="fecha_inicio" class="form-control" required
+                        value="<?= htmlspecialchars($base['fecha_inicio']) ?>">
+                </div>
 
+                <div class="mb-3">
+                    <label for="fecha_fin" class="form-label">Fin de participación:</label>
+                    <input type="date" name="fecha_fin" id="fecha_fin" class="form-control" required
+                        value="<?= htmlspecialchars($base['fecha_fin']) ?>">
+                </div>
+
+                <div class="mb-3">
+                    <label for="fecha_votacion" class="form-label">Inicio de votaciones:</label>
+                    <input type="date" name="fecha_votacion" id="fecha_votacion" class="form-control" required
+                        value="<?= htmlspecialchars($base['fecha_votacion']) ?>">
+                </div>
+
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary">Actualizar bases</button>
+                </div>
+
+            </form>
+        </main>
+    </div>
     <!-- Bootstrap JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 

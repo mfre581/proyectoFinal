@@ -17,7 +17,6 @@ $consulta = $conexion->query("SELECT * FROM bases_concurso");
 $bases = $consulta->fetch(PDO::FETCH_ASSOC);
 ?>
 
-
 <!DOCTYPE html>
 <html lang="es">
 
@@ -96,7 +95,7 @@ $bases = $consulta->fetch(PDO::FETCH_ASSOC);
 
                 <!-- Datos extraídos dinámicamente desde la base de datos -->
                 <p><strong>Máximo de fotos por persona:</strong> <?= $bases['max_fotos'] ?></p>
-                <p><strong>Tamaño máximo de foto:</strong> 2MB</p>
+                <p><strong>Tamaño máximo de foto:</strong> <?= $bases['max_tamano_mb'] ?></p>
                 <p><strong>Inicio de participación:</strong> <?= $bases['fecha_inicio'] ?></p>
                 <p><strong>Fin de participación:</strong> <?= $bases['fecha_fin'] ?></p>
                 <p><strong>Inicio de votaciones:</strong> <?= $bases['fecha_votacion'] ?></p>
@@ -111,9 +110,9 @@ $bases = $consulta->fetch(PDO::FETCH_ASSOC);
                 <a href="#top" class="btn btn-success">Volver arriba</a>
             </div>
         </div>
-
-        <!-- Carga del JS de Bootstrap (necesario para menú responsive y otros componentes) -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    </div>
+    <!-- Carga del JS de Bootstrap (necesario para menú responsive y otros componentes) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

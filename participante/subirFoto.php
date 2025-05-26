@@ -2,8 +2,7 @@
 /* PAGINA DE SUBIDAS DE FOTOGRAFÍAS
  * @author: Michel Freymann
  * Permite al participante seleccionar una foto, editarla y subirla.
- * Tras la subida, se muestra en su galería, y queda a la espera de ser aprobada por el admin para poder ser votada
- * en la galería principal del concurso.
+ * Tras la subida, se muestra en su galería, y queda a la espera de ser aprobada por el administrador
  */
 
 // Inclusión de variables,funciones y abrimos sesión
@@ -13,8 +12,8 @@ session_start();
 
 // Si no hay usuario logueado, redirige a página principal
 if (!isset($_SESSION['usuario_id'])) {
-    header("Location: ../principal.php");
-    exit();
+  header("Location: ../principal.php");
+  exit();
 }
 
 $usuario_id = $_SESSION['usuario_id'];
@@ -23,86 +22,111 @@ $errores = [];  // Array para guardar errores
 
 // Conecta a la base de datos usando PDO
 $conexion = conectarPDO($host, $user, $password, $bbdd);
-$maxSize = 2 * 1024 * 1024; // Tamaño máximo permitido para la imagen: 2 MB
 
-// Procesa el formulario al enviar (POST) y si llega la imagen en base64
+// Obtener máximo de tamaño permitido y de número de fotos
+$consulta = $conexion->query("SELECT max_tamano_mb, max_fotos FROM bases_concurso");
+$config = $consulta->fetch(PDO::FETCH_ASSOC);
+$maxMB = (int)$config['max_tamano_mb'];
+$numMaxImagenes = (int)$config['max_fotos'];
+$maxSize = $maxMB * 1024 * 1024; // Convertir MB a bytes
+
+// Procesa el formulario al enviar (POST)
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['imagenBase64'])) {
-    $imagenBase64 = $_POST['imagenBase64'];
+  $imagenBase64 = $_POST['imagenBase64'];
 
-    // Quita el prefijo data:image/png;base64, para obtener sólo los datos base64
-    $imagenBase64 = preg_replace('#^data:image/\w+;base64,#i', '', $imagenBase64);
+  // Detecta tipo MIME (data:image/jpeg;base64, o data:image/png;base64)
+  if (preg_match('#^data:image/(jpeg|png);base64,#i', $imagenBase64, $matches)) {
+    $mimeType = 'image/' . strtolower($matches[1]);
+  } else {
+    $errores[] = "Formato de imagen no válido.";
+  }
 
-    // Decodifica la imagen base64 a binario
+  // Limpiar base64 (quitar encabezado y caracteres no válidos)
+  $imagenBase64 = preg_replace('#^data:image/\w+;base64,#i', '', $imagenBase64);
+  $imagenBase64 = str_replace([' ', "\n", "\r"], '', $imagenBase64);
+
+  // Obtiene la longitud en caracteres de la cadena base64 ya limpia
+  $base64Length = strlen($imagenBase64);
+
+
+/* Pasamos a calcular el tamaño aproximado real de la imagen
+ * Esto es necesario porque el navegador nos envía la imagen como una cadena Base64, que es más larga que los datos 
+ * binarios reales. Para aplicar correctamente la validación del tamaño máximo permitido (en bytes), debemos estimar
+ *  cuánto ocupará la imagen una vez decodificada, sin haberla decodificada aún
+ */
+
+  /*Busca cuántos `=` hay al final de la cadena; estos indican relleno(padding) y son importantes
+   para calcular el tamaño exacto de los datos decodificados, ya que por defecto los datos en base64 son múltiplos
+   de 4, y si no encaja lo rellena con padding*/
+  $padding = substr_count(substr($imagenBase64, -2), '=');
+
+  /*Esta fórmula calcula el tamaño estimado (en bytes) de los datos originales binarios, ya que la codificación Base64
+   convierte cada 3 bytes de datos binarios en 4 caracteres de texto (y le restamos el padding)
+ */
+  $estimatedSize = ($base64Length * 3 / 4) - $padding;
+
+  // Validar tamaño estimado contra límite máximo
+  if ($estimatedSize > $maxSize) {
+    $errores[] = "La imagen es demasiado grande. El tamaño máximo permitido es $maxMB MB.";
+  } else {
+    // Decodificar imagen
     $imagen = base64_decode($imagenBase64);
 
-    // Define el tipo MIME (el canvas siempre genera PNG)
-    $mimeType = 'image/png';
-
-    // Comprueba que la imagen no supere el tamaño máximo permitido
+    // Validación adicional de tamaño real decodificado
     if (strlen($imagen) > $maxSize) {
-        $errores[] = "La imagen es demasiado grande. El tamaño máximo permitido es 2 MB.";
+      $errores[] = "La imagen es demasiado grande después de decodificar.";
     } else {
-        // Consulta cuántas imágenes ha subido ya el usuario
-        $consulta = $conexion->prepare("SELECT COUNT(*) FROM fotografias WHERE usuario_id = :usuario_id");
-        $consulta->bindParam(':usuario_id', $usuario_id);
-        $consulta->execute();
-        $numImagenes = $consulta->fetchColumn();
+      // Consultar cuántas imágenes ha subido el usuario (dinámico)
+      $consulta = $conexion->prepare("SELECT COUNT(*) FROM fotografias WHERE usuario_id = :usuario_id");
+      $consulta->bindParam(':usuario_id', $usuario_id);
+      $consulta->execute();
+      $numImagenes = $consulta->fetchColumn();
 
-        // Consulta el número máximo de fotos permitidas en el concurso
-        $consultaMax = $conexion->prepare("SELECT max_fotos FROM bases_concurso");
-        $consultaMax->execute();
-        $numMaxImagenes = $consultaMax->fetchColumn();
+      // Validar límite de imágenes del usuario
+      if ($numImagenes >= $numMaxImagenes) {
+        $errores[] = "No puedes subir más de $numMaxImagenes imágenes.";
+      } else {
+        /*Si hemos pasado todas las validaciones, podemos codificar la imagen para almacenarla en base64 en la bd*/
+        $imagenBase64 = base64_encode($imagen);
 
-        // Si el usuario ya llegó al límite, añade error
-        if ($numImagenes >= $numMaxImagenes) {
-            $errores[] = "No puedes subir más de $numMaxImagenes imágenes.";
+        $insert = $conexion->prepare("
+          INSERT INTO fotografias (usuario_id, imagen, tipo_imagen, created_at, updated_at)
+          VALUES (:usuario_id, :imagen, :tipo_imagen, NOW(), NOW())
+        ");
+
+        $insert->bindParam(':usuario_id', $usuario_id);
+        $insert->bindParam(':imagen', $imagenBase64);
+        $insert->bindParam(':tipo_imagen', $mimeType);
+
+        if ($insert->execute()) {
+          $mensaje = "Imagen subida correctamente.";
         } else {
-            // Codifica de nuevo la imagen para guardarla en base64 en la BD
-            $imagenBase64 = base64_encode($imagen);
-
-            // Prepara la inserción de la foto en la base de datos
-            $insert = $conexion->prepare("INSERT INTO fotografias (usuario_id, imagen, tipo_imagen, created_at, updated_at) VALUES (:usuario_id, :imagen, :tipo_imagen, NOW(), NOW())");
-            $insert->bindParam(':usuario_id', $usuario_id);
-            $insert->bindParam(':imagen', $imagenBase64);
-            $insert->bindParam(':tipo_imagen', $mimeType);
-
-            // Ejecuta la inserción y muestra mensaje de éxito o error
-            if ($insert->execute()) {
-                $mensaje = "Imagen subida correctamente.";
-            } else {
-                $errores[] = "Error al subir la imagen.";
-            }
+          $errores[] = "Error al subir la imagen.";
         }
+      }
     }
+  }
 }
 
-// Consulta el nombre del usuario para mostrarlo si se desea
-$select = "SELECT nombre FROM usuarios WHERE usuario_id = :usuario_id";
-$consulta = $conexion->prepare($select);
-$consulta->bindParam(':usuario_id', $usuario_id);
-$consulta->execute();
-$nombre = $consulta->fetchColumn();
 ?>
 
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-    <meta charset="UTF-8" />
-    <title>Subir foto</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link rel="stylesheet" type="text/css" href="../css/cssindex.css">
+  <meta charset="UTF-8" />
+  <title>Subir foto</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Link al archivo css que aplica parte del estilo -->
+  <link rel="stylesheet" href="../css/estilo.css">
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
 </head>
 
-<body class="bg-light d-flex justify-content-center align-items-center min-vh-100">
+<body class="bg-light d-flex justify-content-center align-items-center min-vh-100 fondo3">
 
-  <!-- Contenedor principal en forma de tarjeta -->
-  <div class="card shadow p-4" style="max-width: 900px; width: 100%;">
-    <!-- Barra de navegación superior -->
-    <nav class="navbar navbar-dark bg-dark rounded mb-4">
-      <div class="container-fluid">
+  <div class="card shadow p-4" style="max-width: 1000px; width: 100%;">
+    <nav class="navbar navbar-dark">
+      <div class="container">
         <span class="navbar-brand fs-1 fw-bold">Sube una fotografía</span>
         <a href="./participante.php" class="btn btn-outline-light">Volver</a>
       </div>
@@ -126,21 +150,23 @@ $nombre = $consulta->fetchColumn();
       <?php endif; ?>
 
       <!-- Indicador de tamaño máximo permitido -->
-      <h5 class="mb-4 text-center">Tamaño máximo 2 MB</h5>
+      <h5 class="m-4 text-center">Tamaño máximo <?= $maxMB ?> MB</h5>
 
       <!-- Formulario para subir la imagen -->
-      <form id="uploadForm" action="" method="post" enctype="multipart/form-data" class="mb-4">
-        <!-- Input para seleccionar imagen -->
+      <form id="formulario" action="" method="post" class="mb-4">
         <input class="form-control mb-4" type="file" id="imagenInput" accept="image/jpeg,image/png" required>
 
-        <div class="row">
-          <!-- Vista previa de la imagen en un canvas -->
-          <div class="col-md-8 mb-3 d-flex justify-content-center align-items-center">
-            <canvas id="previewCanvas" class="border rounded w-100" style="max-width: 100%; height: auto; max-height: 400px;"></canvas>
+        <!-- Aquí agregamos el input oculto que enviará la imagen comprimida -->
+        <input type="hidden" name="imagenBase64" id="imagenBase64">
+
+        <div class="d-flex align-items-start gap-4">
+          <!-- Canvas para previsualizar -->
+          <div class="d-flex justify-content-center mb-3">
+            <canvas id="previewCanvas" width="600" height="400" class="border bg-white"></canvas>
           </div>
 
-          <!-- Botones para aplicar filtros -->
-          <div class="col-md-4 d-flex flex-column gap-2">
+          <!-- Botones de filtros -->
+          <div class="d-flex justify-content-center gap-2 flex-column">
             <button type="button" class="btn btn-outline-dark" onclick="applyFilter('original')">Original</button>
             <button type="button" class="btn btn-outline-info" onclick="applyFilter('brightness')">Brillo</button>
             <button type="button" class="btn btn-outline-success" onclick="applyFilter('contrast')">Contraste</button>
@@ -150,125 +176,162 @@ $nombre = $consulta->fetchColumn();
             <button type="button" class="btn btn-outline-primary" onclick="applyFilter('invert')">Invertir colores</button>
           </div>
         </div>
-
-        <!-- Botón para subir la imagen -->
-        <div class="text-center mt-4">
-          <button type="button" class="btn btn-primary" onclick="prepareImage()">Subir Imagen</button>
+        <div class="text-center my-5">
+          <!-- Botón de envío del formulario -->
+          <button type="submit" class="btn btn-success mt-3">Subir Imagen</button>
         </div>
-
-        <!-- Campo oculto para enviar la imagen en base64 -->
-        <input type="hidden" name="imagenBase64" id="imagenBase64">
       </form>
+
+
     </main>
   </div>
 
+
+  <!------ JS 
+
+    Este script permite al usuario cargar una imagen y verla en una vista previa (canvas)
+    Además, antes de enviarla al servidor:
+     - La convierte a formato Base64 comprimido en JPEG para reducir tamaño
+     - Ajusta la vista previa a un tamaño máximo sin deformarla (respetando la proporción)
+     - Inserta la imagen codificada en un campo oculto del formulario para que PHP la procese.
+    
+      También contiene la función que gestiona el proceso de edición ------>
+   
+
   <script>
-      // Obtiene referencias al canvas y su contexto para dibujar la imagen
-      let canvas = document.getElementById('previewCanvas');
-      let ctx = canvas.getContext('2d');
-      let originalImage = null;  // Guarda la imagen original sin filtros
+    // Obtenemos el elemento <canvas> donde se mostrará la imagen
+    const canvas = document.getElementById('previewCanvas');
 
-      // Cuando el usuario selecciona un archivo, se carga y se muestra en el canvas
-      document.getElementById('imagenInput').addEventListener('change', function(e) {
-          const file = e.target.files[0];
-          if (file && file.type.startsWith('image/')) {
-              const reader = new FileReader();
-              reader.onload = function(event) {
-                  const img = new Image();
-                  img.onload = function() {
-                      // Ajusta el tamaño del canvas a la imagen y la dibuja
-                      canvas.width = img.width;
-                      canvas.height = img.height;
-                      ctx.drawImage(img, 0, 0);
-                      // Guarda la imagen original para aplicar filtros después
-                      originalImage = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                  };
-                  img.src = event.target.result;
-              };
-              reader.readAsDataURL(file);
-          }
-      });
+    // Obtenemos el contexto 2D del canvas, que permite dibujar imágenes, formas, etc.
+    const ctx = canvas.getContext('2d');
 
-      // Aplica filtros a la imagen en el canvas según el botón presionado
-      function applyFilter(type) {
-          if (!originalImage) return;  // No hacer nada si no hay imagen cargada
-          ctx.putImageData(originalImage, 0, 0);  // Restaurar imagen original antes de aplicar filtro
-          let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-          let data = imageData.data;
+  // Variable que almacenará una copia de la imagen original cargada en el canvas.
+  // Esto es necesario para poder restaurar la imagen original cada vez que se aplique un nuevo filtro.
+    let originalImage = null;
 
-          switch (type) {
-              case 'grayscale':  // Blanco y negro
-                  for (let i = 0; i < data.length; i += 4) {
-                      let avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
-                      data[i] = data[i + 1] = data[i + 2] = avg;
-                  }
-                  break;
+   // Escuchar evento al cargar imagen
+    document.getElementById('imagenInput').addEventListener('change', function(e) {
+      const file = e.target.files[0];
 
-              case 'brightness':  // Aumenta brillo
-                  for (let i = 0; i < data.length; i += 4) {
-                      data[i] += 40;     // R
-                      data[i + 1] += 40; // G
-                      data[i + 2] += 40; // B
-                  }
-                  break;
+      //Comprueba que el archivo cargado es una imagen válida (jpeg, png…)
+      if (file && file.type.startsWith('image/')) {
 
-              case 'contrast':  // Ajusta contraste
-                  let contrast = 40; // valor entre -255 a 255
-                  let factor = (259 * (contrast + 255)) / (255 * (259 - contrast));
-                  for (let i = 0; i < data.length; i += 4) {
-                      data[i] = factor * (data[i] - 128) + 128;
-                      data[i + 1] = factor * (data[i + 1] - 128) + 128;
-                      data[i + 2] = factor * (data[i + 2] - 128) + 128;
-                  }
-                  break;
+        // Creamos un FileReader para leer el contenido del archivo como base64
+        const reader = new FileReader();
 
-              case 'redTint':  // Tono rojizo
-                  for (let i = 0; i < data.length; i += 4) {
-                      data[i] += 50; // R
-                  }
-                  break;
+        // Definimos qué hacer cuando el archivo se haya leído completamente
+        reader.onload = function(event) {
 
-              case 'sepia':  // Filtro sepia clásico
-                  for (let i = 0; i < data.length; i += 4) {
-                      let r = data[i], g = data[i + 1], b = data[i + 2];
-                      data[i] = Math.min(255, r * .393 + g * .769 + b * .189);
-                      data[i + 1] = Math.min(255, r * .349 + g * .686 + b * .168);
-                      data[i + 2] = Math.min(255, r * .272 + g * .534 + b * .131);
-                  }
-                  break;
+           // Creamos una nueva imagen HTML que cargará la imagen del archivo
+          const img = new Image();
 
-              case 'invert':  // Invierte colores
-                  for (let i = 0; i < data.length; i += 4) {
-                      data[i] = 255 - data[i];       // R
-                      data[i + 1] = 255 - data[i + 1]; // G
-                      data[i + 2] = 255 - data[i + 2]; // B
-                  }
-                  break;
+             // Cuando la imagen se cargue completamente obtenemos el tamaño original de la imagen
+          img.onload = function() {
+            const originalWidth = img.width;
+            const originalHeight = img.height;
 
-              case 'original':  // Vuelve a la imagen original sin filtro
-                  ctx.putImageData(originalImage, 0, 0);
-                  return;
-          }
-          // Dibuja la imagen modificada en el canvas
-          ctx.putImageData(imageData, 0, 0);
+             // Definimos un tamaño máximo permitido para mostrar en el canvas
+            const MAX_WIDTH = 800;
+            const MAX_HEIGHT = 400;
+
+            // Calculamos la proporción para redimensionar la imagen sin deformarla
+            const ratio = Math.min(MAX_WIDTH / originalWidth, MAX_HEIGHT / originalHeight, 1);
+
+            // Establecemos el tamaño interno real del canvas (sin escalado)
+            canvas.width = originalWidth;
+            canvas.height = originalHeight;
+
+            // Dibujamos la imagen original en el canvas
+            ctx.drawImage(img, 0, 0, originalWidth, originalHeight);
+
+             // Escalamos visualmente el canvas para que no ocupe tanto espacio (solo cambia apariencia)
+            canvas.style.width = (originalWidth * ratio) + 'px';
+            canvas.style.height = (originalHeight * ratio) + 'px';
+
+            // Guardamos los datos de la imagen original tal como se cargó en el canvas.
+            // Así podremos volver a este estado inicial antes de aplicar cada filtro.
+            originalImage = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          };
+          // Asignamos la imagen cargada desde el FileReader como fuente de la imagen HTML
+          img.src = event.target.result;
+        };
+        // Iniciamos la lectura del archivo como una URL en base64
+        reader.readAsDataURL(file);
       }
+    });
 
-      // Prepara la imagen para subir: pasa la imagen del canvas a base64 y envía el formulario
-      function prepareImage() {
-          if (!originalImage) {
-              alert("Debes seleccionar una imagen antes de subir.");
-              return;
+    // Cuando se envía el formulario, generar imagen base64 comprimida y ponerla en el input oculto
+    document.getElementById('formulario').addEventListener('submit', function(e) {
+      const calidad = 0.8; // Ajusta la calidad según sea necesario
+      const imagenBase64 = canvas.toDataURL("image/jpeg", calidad); // Comprime a JPEG
+      document.getElementById('imagenBase64').value = imagenBase64;
+    });
+
+    // Aplica filtros a la imagen en el canvas según el botón presionado
+    function applyFilter(type) {
+      if (!originalImage) return; // No hacer nada si no hay imagen cargada
+      ctx.putImageData(originalImage, 0, 0); // Restaurar imagen original antes de aplicar filtro
+      let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      let data = imageData.data;
+
+      switch (type) {
+        case 'grayscale': // Blanco y negro
+          for (let i = 0; i < data.length; i += 4) {
+            let avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
+            data[i] = data[i + 1] = data[i + 2] = avg;
           }
+          break;
 
-          // Convierte el canvas a imagen PNG en base64
-          const imagenBase64 = canvas.toDataURL("image/png");
-          // Coloca el valor en el campo oculto para enviarlo al servidor
-          document.getElementById('imagenBase64').value = imagenBase64;
-          // Limpia el input de archivo para evitar reenvíos accidentales
-          document.getElementById('imagenInput').value = "";
-          // Envía el formulario
-          document.getElementById('uploadForm').submit();
+        case 'brightness': // Aumenta brillo
+          for (let i = 0; i < data.length; i += 4) {
+            data[i] += 40; // R
+            data[i + 1] += 40; // G
+            data[i + 2] += 40; // B
+          }
+          break;
+
+        case 'contrast': // Ajusta contraste
+          let contrast = 40; // valor entre -255 a 255
+          let factor = (259 * (contrast + 255)) / (255 * (259 - contrast));
+          for (let i = 0; i < data.length; i += 4) {
+            data[i] = factor * (data[i] - 128) + 128;
+            data[i + 1] = factor * (data[i + 1] - 128) + 128;
+            data[i + 2] = factor * (data[i + 2] - 128) + 128;
+          }
+          break;
+
+        case 'redTint': // Tono rojizo
+          for (let i = 0; i < data.length; i += 4) {
+            data[i] += 50; // R
+          }
+          break;
+
+        case 'sepia': // Filtro sepia clásico
+          for (let i = 0; i < data.length; i += 4) {
+            let r = data[i],
+              g = data[i + 1],
+              b = data[i + 2];
+            data[i] = Math.min(255, r * .393 + g * .769 + b * .189);
+            data[i + 1] = Math.min(255, r * .349 + g * .686 + b * .168);
+            data[i + 2] = Math.min(255, r * .272 + g * .534 + b * .131);
+          }
+          break;
+
+        case 'invert': // Invierte colores
+          for (let i = 0; i < data.length; i += 4) {
+            data[i] = 255 - data[i]; // R
+            data[i + 1] = 255 - data[i + 1]; // G
+            data[i + 2] = 255 - data[i + 2]; // B
+          }
+          break;
+
+        case 'original': // Vuelve a la imagen original sin filtro
+          ctx.putImageData(originalImage, 0, 0);
+          return;
       }
+      // Dibuja la imagen modificada en el canvas
+      ctx.putImageData(imageData, 0, 0);
+    }
   </script>
 
 </body>

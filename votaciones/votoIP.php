@@ -179,8 +179,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['fotoVotada'])) {
 
     </div>
 
-    <!-- Bootstrap JS y script para actualizar la imagen del modal -->
+    <!-- Bootstrap JS para actualizar la imagen del modal -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
     <script>
         // Cuando se abre el modal, cambiamos la imagen según la que se clicó
         const modalFoto = document.getElementById('modalFoto')

@@ -15,6 +15,7 @@
   background-color: #f5f7fa !important;
 }
 
+/*Imagen de fondo para el área de usuario anónimo*/
 .fondo1 {
   background-image: url("../img/suelo1.jpg");
   background-repeat: no-repeat; /* No repetir la imagen */
@@ -23,12 +24,22 @@
   background-attachment: fixed; /* Para que quede fija al hacer scroll (opcional) */
 }
 
+/*Imagen de fondo para el área de usuario administrador*/
 .fondo2 {
   background-image: url("../img/suelo2.jpg");
-  background-repeat: no-repeat; /* No repetir la imagen */
-  background-size: cover; /* Que la imagen cubra todo el área */
-  background-position: center center; /* Centrar la imagen */
-  background-attachment: fixed; /* Para que quede fija al hacer scroll (opcional) */
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  background-attachment: fixed;
+}
+
+/*Imagen de fondo para el área de usuario participante*/
+.fondo3 {
+  background-image: url("../img/suelo3.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  background-attachment: fixed;
 }
 
 thead.encabezado-tabla th {

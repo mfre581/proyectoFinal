@@ -62,72 +62,76 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['eliminar_id'])) {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <title>Tu Galería</title>
+    <title>Tu Galería</title>
     <!-- Link al archivo css que aplica parte del estilo -->
     <link rel="stylesheet" href="../css/estilo.css">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
 </head>
 
-<body>
-    <!-- Barra de navegación simple -->
-    <nav class="navbar navbar-dark bg-dark px-3 mb-4">
-        <span class="navbar-brand mb-0 h1">Tu Galería</span>
-        <a href="./tuGaleria.php" class="btn btn-outline-light btn-sm">Volver a modo normal</a>
-    </nav>
+<body class="bg-light d-flex justify-content-center align-items-center min-vh-100 fondo2">
 
-    
+    <div class="card shadow p-4" style="max-width: 900px; width: 100%;">
 
-    <div class="container">
-        <?php if ($fotosProcesadas): ?>
-            <!-- Tabla responsive con Bootstrap -->
-            <div class="table-responsive">
-                <table class="table table-bordered table-striped align-middle text-center">
-                    <thead class="table-dark">
-                        <tr>
-                            <th>Imagen</th>
-                            <th>Estado</th>
-                            <th>Votos</th>
-                            <th>Eliminar</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($fotosProcesadas as $foto): ?>
+        <!-- Navbar con título y botón para volver -->
+        <nav class="navbar navbar-dark">
+            <div class="container">
+                <span class="navbar-brand fs-3">Detalles de tus fotografías</span>
+                <a href="./tuGaleria.php" class="btn btn-outline-light">Volver a galería</a>
+            </div>
+        </nav>
+
+
+        <main class="container my-5">
+            <?php if ($fotosProcesadas): ?>
+                <!-- Tabla responsive con Bootstrap -->
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped align-middle text-center">
+                        <thead class="encabezado-tabla">
                             <tr>
-                                <!-- Imagen en tamaño pequeño -->
-                                <td class="text-center">
-                                    <img src="<?= $foto['imagen'] ?>" class="img-thumbnail" style="max-width: 350px; height: auto;" alt="Foto subida">
-                                </td>
-                                <!-- Estado -->
-                                <td><?= htmlspecialchars($foto['estado']) ?></td>
-                                <!-- Votos -->
-                                <td><?= htmlspecialchars($foto['votos']) ?></td>
-                                <!-- Botón eliminar -->
-                                <td>
-                                    <form method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar esta foto?');">
-                                        <input type="hidden" name="eliminar_id" value="<?= $foto['foto_id'] ?>">
-                                        <button type="submit" class="btn btn-sm btn-outline-danger">❌</button>
-                                    </form>
-                                </td>
+                                <th>Imagen</th>
+                                <th>Estado</th>
+                                <th>Votos</th>
+                                <th>Eliminar</th>
                             </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-            </div>
-        <?php else: ?>
-            <!-- Mensaje cuando no hay imágenes -->
-            <div class="alert alert-info text-center" role="alert">
-                No hay fotografías para mostrar.
-            </div>
-        <?php endif; ?>
-    </div>
-    <div class="text-center my-5">
-            <a href="#top" class="btn btn-warning btn-lg">Volver arriba</a>
-        </div>
-       
+                        </thead>
+                        <tbody>
+                            <?php foreach ($fotosProcesadas as $foto): ?>
+                                <tr>
+                                    <!-- Imagen en tamaño pequeño -->
+                                    <td class="text-center">
+                                        <img src="<?= $foto['imagen'] ?>" class="img-thumbnail" style="max-width: 350px; height: auto;" alt="Foto subida">
+                                    </td>
+                                    <!-- Estado -->
+                                    <td><?= htmlspecialchars($foto['estado']) ?></td>
+                                    <!-- Votos -->
+                                    <td><?= htmlspecialchars($foto['votos']) ?></td>
+                                    <!-- Botón eliminar -->
+                                    <td>
+                                        <form method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar esta foto?');">
+                                            <input type="hidden" name="eliminar_id" value="<?= $foto['foto_id'] ?>">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger">❌</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            <?php else: ?>
+                <!-- Mensaje cuando no hay imágenes -->
+                <div class="alert alert-info text-center" role="alert">
+                    No hay fotografías para mostrar.
+                </div>
+            <?php endif; ?>
 
-    <!-- Bootstrap 5 JS (opcional para algunos componentes) -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+            <div class="text-center my-5">
+                <a href="#top" class="btn btn-warning">Volver arriba</a>
+            </div>
+    </div>
+
+    </div>
+
 </body>
 
 </html>

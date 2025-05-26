@@ -95,7 +95,7 @@ $bases = $consulta->fetch(PDO::FETCH_ASSOC);
 
                 <!-- Datos extraídos dinámicamente desde la base de datos -->
                 <p><strong>Máximo de fotos por persona:</strong> <?= $bases['max_fotos'] ?></p>
-                <p><strong>Tamaño máximo de foto:</strong> <?= $bases['max_tamano_mb'] ?></p>
+                <p><strong>Tamaño máximo de foto:</strong> <?= $bases['max_tamano_mb'] ?> MB</p>
                 <p><strong>Inicio de participación:</strong> <?= $bases['fecha_inicio'] ?></p>
                 <p><strong>Fin de participación:</strong> <?= $bases['fecha_fin'] ?></p>
                 <p><strong>Inicio de votaciones:</strong> <?= $bases['fecha_votacion'] ?></p>

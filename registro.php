@@ -21,20 +21,45 @@ $apellido = $_POST["apellido"] ?? "";
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-    // Verifica si el email ya está registrado
-    $select = "SELECT COUNT(*) as cuenta FROM usuarios WHERE email = :email";
-    $consulta = $conexion->prepare($select);
-    $consulta->execute(["email" => $email]);
-    $resultado = $consulta->fetch();
-
-    if ($resultado["cuenta"] > 0) {
-        $errores[] = "La dirección de email ya está registrada.";
+    // Validar nombre
+    if (empty($nombre)) {
+        $errores[] = "El nombre es obligatorio.";
+    } elseif (strlen($nombre) > 50) {
+        $errores[] = "El nombre no puede tener más de 50 caracteres.";
     }
 
-    // Comprobar longitud de la contraseña (entre 5 y 20 caracteres)
-    if (strlen($contrasena) < 5 || strlen($contrasena) > 20) {
+    // Validar apellido
+    if (empty($apellido)) {
+        $errores[] = "El apellido es obligatorio.";
+    } elseif (strlen($apellido) > 50) {
+        $errores[] = "El apellido no puede tener más de 50 caracteres.";
+    }
+
+    // Validar email
+    if (empty($email)) {
+        $errores[] = "El email es obligatorio.";
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $errores[] = "El email no es válido.";
+    } else {
+
+        // Verifica si el email ya está registrado
+        $select = "SELECT COUNT(*) as cuenta FROM usuarios WHERE email = :email";
+        $consulta = $conexion->prepare($select);
+        $consulta->execute(["email" => $email]);
+        $resultado = $consulta->fetch();
+
+        if ($resultado["cuenta"] > 0) {
+            $errores[] = "La dirección de email ya está registrada.";
+        }
+    }
+
+    // Validar contraseña
+    if (empty($contrasena)) {
+        $errores[] = "La contraseña es obligatoria.";
+    } elseif (strlen($contrasena) < 5 || strlen($contrasena) > 20) {
         $errores[] = "La contraseña debe tener entre 5 y 20 caracteres.";
     }
+
 
     if (empty($errores)) {
         try {
@@ -63,6 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -109,25 +135,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <?php endif; ?>
 
             <!-- Formulario de registro -->
-            <form action="" method="POST" novalidate>
+            <form action="" method="POST">
                 <div class="mb-3">
                     <label for="nombre" class="form-label">Nombre:</label>
-                    <input type="text" class="form-control" name="nombre" id="nombre" required
+                    <input type="text" class="form-control" name="nombre" id="nombre"
                         value="<?= htmlspecialchars($nombre) ?>">
                 </div>
                 <div class="mb-3">
                     <label for="apellido" class="form-label">Apellido:</label>
-                    <input type="text" class="form-control" name="apellido" id="apellido" required
+                    <input type="text" class="form-control" name="apellido" id="apellido"
                         value="<?= htmlspecialchars($apellido) ?>">
                 </div>
                 <div class="mb-3">
                     <label for="email" class="form-label">Correo electrónico:</label>
-                    <input type="email" class="form-control" name="email" id="email" required
+                    <input type="email" class="form-control" name="email" id="email"
                         value="<?= htmlspecialchars($email) ?>">
                 </div>
                 <div class="mb-3">
                     <label for="password" class="form-label">Contraseña:</label>
-                    <input type="password" class="form-control" name="password" id="password" required>
+                    <input type="password" class="form-control" name="password" id="password">
                     <div class="form-text">Debe tener entre 5 y 20 caracteres.</div>
                 </div>
                 <button type="submit" class="btn btn-primary w-100">Registrarse</button>

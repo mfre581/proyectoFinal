@@ -23,24 +23,47 @@ $clave = $_POST["password"] ?? "";
 $nombre = $_POST["nombre"] ?? "";
 $apellido = $_POST["apellido"] ?? "";
 $rol = $_POST["rol"] ?? "";
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-    // Verifica si el email ya existe
-    $select = "SELECT COUNT(*) as cuenta FROM usuarios WHERE email = :email";
-    $consulta = $conexion->prepare($select);
-    $consulta->execute(["email" => $email]);
-    $resultado = $consulta->fetch();
-
-    if ($resultado["cuenta"] > 0) {
-        $errores[] = "La dirección de email ya está registrada.";
+    // Validar nombre
+    if (empty($nombre)) {
+        $errores[] = "El nombre es obligatorio.";
+    } elseif (strlen($nombre) > 50) {
+        $errores[] = "El nombre no puede tener más de 50 caracteres.";
     }
 
-    // Comprobar longitud de la contraseña
-    if (strlen($clave) < 5 || strlen($clave) > 20) {
+    // Validar apellido
+    if (empty($apellido)) {
+        $errores[] = "El apellido es obligatorio.";
+    } elseif (strlen($apellido) > 50) {
+        $errores[] = "El apellido no puede tener más de 50 caracteres.";
+    }
+
+    // Validar email
+    if (empty($email)) {
+        $errores[] = "El email es obligatorio.";
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $errores[] = "El email no es válido.";
+    } else {
+        // Verifica si el email ya existe
+        $select = "SELECT COUNT(*) as cuenta FROM usuarios WHERE email = :email";
+        $consulta = $conexion->prepare($select);
+        $consulta->execute(["email" => $email]);
+        $resultado = $consulta->fetch();
+
+        if ($resultado["cuenta"] > 0) {
+            $errores[] = "La dirección de email ya está registrada.";
+        }
+    }
+
+    // Validar contraseña (fuera del else para que siempre se valide)
+    if (empty($clave)) {
+        $errores[] = "La contraseña es obligatoria.";
+    } elseif (strlen($clave) < 5 || strlen($clave) > 20) {
         $errores[] = "La contraseña debe tener entre 5 y 20 caracteres.";
     }
 
+    // Si no hay errores, insertar usuario
     if (empty($errores)) {
         try {
             // Hashear la contraseña
@@ -69,6 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 
+
 ?>
 
 <!DOCTYPE html>
@@ -89,70 +113,70 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <!-- Contenedor principal en forma de tarjeta -->
     <div class="card shadow p-4" style="max-width: 480px; width: 100%;">
 
-     <!-- Navbar con título y botón para volver -->
-    <nav class="navbar navbar-dark">
-        <div class="container">
-            <span class="navbar-brand fs-3 fw-bold">Añadir usuario</span>
-            <a href="./administrador.php" class="btn btn-outline-light">Volver</a>
-        </div>
-    </nav>
-
-    <!-- Contenedor principal -->
-    <main class="container my-5">
-
-
-        <!-- Mostrar errores si existen -->
-        <?php if (!empty($errores)): ?>
-            <div class="alert alert-danger" role="alert">
-                <ul class="mb-0">
-                    <?php foreach ($errores as $err): ?>
-                        <li><?= htmlspecialchars($err) ?></li>
-                    <?php endforeach; ?>
-                </ul>
+        <!-- Navbar con título y botón para volver -->
+        <nav class="navbar navbar-dark">
+            <div class="container">
+                <span class="navbar-brand fs-3 fw-bold">Añadir usuario</span>
+                <a href="./administrador.php" class="btn btn-outline-light">Volver</a>
             </div>
-        <?php endif; ?>
+        </nav>
 
-        <!-- Formulario de registro -->
-        <form action="" method="POST" class="mx-auto" style="max-width: 500px;">
+        <!-- Contenedor principal -->
+        <main class="container my-5">
 
-            <div class="mb-3">
-                <label for="nombre" class="form-label">Nombre:</label>
-                <input type="text" name="nombre" id="nombre" class="form-control" required
-                    value="<?= htmlspecialchars($nombre) ?>">
-            </div>
 
-             <div class="mb-3">
-                <label for="apellido" class="form-label">Apellido:</label>
-                <input type="text" name="apellido" id="apellido" class="form-control" required
-                    value="<?= htmlspecialchars($apellido) ?>">
-            </div>
+            <!-- Mostrar errores si existen -->
+            <?php if (!empty($errores)): ?>
+                <div class="alert alert-danger" role="alert">
+                    <ul class="mb-0">
+                        <?php foreach ($errores as $err): ?>
+                            <li><?= htmlspecialchars($err) ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+            <?php endif; ?>
 
-            <div class="mb-3">
-                <label for="email" class="form-label">Correo electrónico:</label>
-                <input type="email" name="email" id="email" class="form-control" required
-                    value="<?= htmlspecialchars($email) ?>">
-            </div>
+            <!-- Formulario de registro -->
+            <form action="" method="POST" class="mx-auto" style="max-width: 500px;">
 
-            <div class="mb-3">
-                <label for="rol" class="form-label">Rol:</label>
-                <select name="rol" id="rol" class="form-select">
-                    <option value="participante" <?= ($rol === "participante") ? "selected" : "" ?>>Participante</option>
-                    <option value="admin" <?= ($rol === "admin") ? "selected" : "" ?>>Administrador</option>
-                </select>
-            </div>
+                <div class="mb-3">
+                    <label for="nombre" class="form-label">Nombre:</label>
+                    <input type="text" name="nombre" id="nombre" class="form-control" 
+                        value="<?= htmlspecialchars($nombre) ?>">
+                </div>
 
-            <div class="mb-3">
-                <label for="password" class="form-label">Contraseña:</label>
-                <input type="password" name="password" id="password" class="form-control" required>
-            </div>
+                <div class="mb-3">
+                    <label for="apellido" class="form-label">Apellido:</label>
+                    <input type="text" name="apellido" id="apellido" class="form-control" 
+                        value="<?= htmlspecialchars($apellido) ?>">
+                </div>
 
-            <div class="d-grid">
-                <button type="submit" class="btn btn-primary">Registrarse</button>
-            </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Correo electrónico:</label>
+                    <input type="email" name="email" id="email" class="form-control" 
+                        value="<?= htmlspecialchars($email) ?>">
+                </div>
 
-        </form>
+                <div class="mb-3">
+                    <label for="rol" class="form-label">Rol:</label>
+                    <select name="rol" id="rol" class="form-select">
+                        <option value="participante" <?= ($rol === "participante") ? "selected" : "" ?>>Participante</option>
+                        <option value="admin" <?= ($rol === "admin") ? "selected" : "" ?>>Administrador</option>
+                    </select>
+                </div>
 
-    </main>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Contraseña:</label>
+                    <input type="password" name="password" id="password" class="form-control">
+                </div>
+
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary">Registrarse</button>
+                </div>
+
+            </form>
+
+        </main>
     </div>
     <!-- Bootstrap JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

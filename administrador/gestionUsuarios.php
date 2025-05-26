@@ -14,7 +14,7 @@ session_start();
 
 // Verifica que el usuario es administrador
 if (!isset($_SESSION['usuario_id']) || $_SESSION['rol'] !== 'admin') {
-    header("Location: ../principal.php");
+    header("Location: ../index.php");
     exit();
 }
 
@@ -55,6 +55,7 @@ $usuarios = $stmt_usuarios->fetchAll();
 <head>
     <meta charset="UTF-8" />
     <title>Gestionar Usuarios</title>
+    <!-- Meta etiqueta para diseño responsive en dispositivos móviles -->
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <!-- Link al archivo css que aplica parte del estilo -->
     <link rel="stylesheet" href="../css/estilo.css">
@@ -73,7 +74,6 @@ $usuarios = $stmt_usuarios->fetchAll();
             <a href="./administrador.php" class="btn btn-outline-light">Volver</a>
         </div>
     </nav>
-
 
     <!-- Contenedor principal -->
     <div class="container my-5">
@@ -124,8 +124,6 @@ $usuarios = $stmt_usuarios->fetchAll();
 
         </div>
     </div>
-    <!-- Bootstrap JS Bundle -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 

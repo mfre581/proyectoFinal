@@ -8,8 +8,6 @@
   border-radius: 0.375rem 0.375rem 0 0;
 }
 
-/**/
-
 /*Estilo para las tarjetas con las bases del concurso en principal.php*/
 .card-intro {
   background-color: #f5f7fa !important;
@@ -42,8 +40,8 @@
   background-attachment: fixed;
 }
 
+/*Estilo para los cabeceros de las tablas*/
 thead.encabezado-tabla th {
-  /*font-family: "Merriweather", serif;*/
   background-color: rgb(9, 18, 62);
   color: white;
 }

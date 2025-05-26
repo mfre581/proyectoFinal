@@ -97,6 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <head>
     <meta charset="UTF-8">
     <title>Registro</title>
+    <!-- Meta etiqueta para diseño responsive en dispositivos móviles -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Link al archivo css que aplica parte del estilo -->
     <link rel="stylesheet" href="./css/estilo.css">
@@ -113,8 +114,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <!-- Barra de navegación -->
         <nav class="navbar navbar-dark">
             <div class="container-fluid">
-                <a class="navbar-brand fs-3 fw-bold" href="./principal.php">Retales Urbanos</a>
-                <a href="./principal.php" class="btn btn-outline-light btn-sm">Volver</a>
+                <a class="navbar-brand fs-3 fw-bold" href="./index.php">Retales Urbanos</a>
+                <a href="./index.php" class="btn btn-outline-light btn-sm">Volver</a>
             </div>
         </nav>
 

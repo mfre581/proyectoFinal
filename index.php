@@ -58,15 +58,11 @@ $bases = $consulta->fetch(PDO::FETCH_ASSOC);
             </div>
         </nav>
 
-
-
         <!-- Botón para acceder a la votación -->
         <div class="my-4 text-center">
             <a class="btn btn-primary" href="./votaciones/votoIP.php">Entra a la galería para votar</a>
 
         </div>
-
-
 
         <!-- Imagen representativa del concurso -->
         <div class="container mb-4">
@@ -111,7 +107,7 @@ $bases = $consulta->fetch(PDO::FETCH_ASSOC);
             </div>
         </div>
     </div>
-    <!-- Carga del JS de Bootstrap (necesario para menú responsive y otros componentes) -->
+    <!-- Carga del JS de Bootstrap (necesario para menú responsive) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 

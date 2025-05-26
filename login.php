@@ -64,12 +64,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-
-    <!-- Meta para hacer la página responsive -->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <title>Login</title>
+    <!-- Meta etiqueta para diseño responsive en dispositivos móviles -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Link al archivo css que aplica parte del estilo -->
     <link rel="stylesheet" href="./css/estilo.css">
     <!-- Bootstrap CSS -->
@@ -83,9 +80,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         <!-- Barra de navegación sencilla -->
         <nav class="navbar navbar-dark">
-            <div class="container-fluid">
-                <a class="navbar-brand fs-3 fw-bold" href="./principal.php">Retales Urbanos</a>
-                <a href="./principal.php" class="btn btn-outline-light btn-sm">Volver</a>
+            <div class="container">
+                <a class="navbar-brand fs-3 fw-bold" href="./index.php">Retales Urbanos</a>
+                <a href="./index.php" class="btn btn-outline-light btn-sm">Volver</a>
             </div>
         </nav>
 
@@ -121,9 +118,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </form>
         </div>
     </div>
-
-    <!-- Bootstrap JS para funcionalidades -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

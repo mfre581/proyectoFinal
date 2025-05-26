@@ -5,16 +5,14 @@
 * */
 
 
-// Incluimos las variables de conexión y funciones reutilizables
+// Inclusión de variables,funciones y abrimos sesión
 require_once("../utiles/variables.php");
 require_once("../utiles/funciones.php");
-
-// Abrir sesión
 session_start();
 
 // Verificamos que el usuario está logueado y es administrador
 if (!isset($_SESSION['usuario_id']) || $_SESSION['rol'] !== 'admin') {
-    header("Location: ../principal.php");  // Redirigimos si no tiene permiso
+    header("Location: ../index.php");  // Redirigimos si no tiene permiso
     exit();
 }
 
@@ -94,6 +92,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['eliminar_id'])) {
 <head>
     <meta charset="UTF-8" />
     <title>Gestión de Fotografías</title>
+    <!-- Meta etiqueta para diseño responsive en dispositivos móviles -->
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <!-- Link al archivo css que aplica parte del estilo -->
     <link rel="stylesheet" href="../css/estilo.css">
@@ -170,8 +169,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['eliminar_id'])) {
             <a href="#top" class="btn btn-warning">Volver arriba</a>
         </div>
     </div>
-    <!-- Bootstrap JS Bundle -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 

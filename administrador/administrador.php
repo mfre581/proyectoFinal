@@ -17,7 +17,7 @@ if (isset($_SESSION['usuario_id']) && isset($_SESSION['rol']) && $_SESSION['rol'
     $usuario_id = $_SESSION['usuario_id'];
 } else {
     // Si no es administrador, redirige a la página principal
-    header("Location: ../principal.php");
+    header("Location: ../index.php");
     exit();
 }
 
@@ -36,6 +36,7 @@ $nombre = $consulta->fetchColumn();
 <head>
     <meta charset="UTF-8" />
     <title>Área Administrador</title>
+    <!-- Meta etiqueta para diseño responsive en dispositivos móviles -->
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <!-- Link al archivo css que aplica parte del estilo -->
     <link rel="stylesheet" href="../css/estilo.css">
@@ -50,7 +51,7 @@ $nombre = $consulta->fetchColumn();
 
         <!-- Barra de navegación -->
         <nav class="navbar navbar-dark">
-            <div class="container-fluid">
+            <div class="container">
                 <h2 class="text-light fs-2 my-0">Bienvenid@, <?= htmlspecialchars($nombre) ?></h2>
                 <a href="../cerrarSesion/cerrar_sesion.php" class="btn btn-outline-light">Cerrar sesión</a>
             </div>
@@ -65,11 +66,8 @@ $nombre = $consulta->fetchColumn();
                 <a href="./gestionBases.php" class="btn btn-warning btn-lg">Modificar bases del concurso</a>
             </div>
         </main>
-
     </div>
-    <!-- Bootstrap JS Bundle -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
+    
 </body>
 
 </html>

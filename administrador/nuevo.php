@@ -11,7 +11,7 @@ session_start();
 
 // Verifica que el usuario es administrador
 if (!isset($_SESSION['usuario_id']) || $_SESSION['rol'] !== 'admin') {
-    header("Location: ../principal.php");
+    header("Location: ../index.php");
     exit();
 }
 
@@ -92,7 +92,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 
-
 ?>
 
 <!DOCTYPE html>
@@ -101,6 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <head>
     <meta charset="UTF-8" />
     <title>Nuevo usuario</title>
+    <!-- Meta etiqueta para diseño responsive en dispositivos móviles -->
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <!-- Link al archivo css que aplica parte del estilo -->
     <link rel="stylesheet" href="../css/estilo.css">
@@ -123,7 +123,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         <!-- Contenedor principal -->
         <main class="container my-5">
-
 
             <!-- Mostrar errores si existen -->
             <?php if (!empty($errores)): ?>
@@ -178,8 +177,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         </main>
     </div>
-    <!-- Bootstrap JS Bundle -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 

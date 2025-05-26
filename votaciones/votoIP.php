@@ -91,6 +91,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['fotoVotada'])) {
 <head>
     <meta charset="UTF-8" />
     <title>Votaciones</title>
+    <!-- Meta etiqueta para diseño responsive en dispositivos móviles -->
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <!-- Link al archivo css que aplica parte del estilo -->
     <link rel="stylesheet" href="../css/estilo.css" />
@@ -117,7 +118,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['fotoVotada'])) {
         <nav class="navbar navbar-dark">
             <div class="container-fluid">
                 <h1 class="text-light fs-2 my-0">Galería</h1>
-                <a href="../principal.php" class="btn btn-outline-light btn-sm">Volver</a>
+                <a href="../index.php" class="btn btn-outline-light btn-sm">Volver</a>
             </div>
         </nav>
 

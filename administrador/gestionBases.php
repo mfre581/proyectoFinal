@@ -7,16 +7,14 @@
  * - Fecha de inicio de votaciones
  */
 
-// Carga variables y funciones
+// Inclusión de variables,funciones y abrimos sesión
 require_once("../utiles/variables.php");
 require_once("../utiles/funciones.php");
-
-// Iniciar sesión
 session_start();
 
 // Comprobar que el usuario es administrador
 if (!isset($_SESSION['usuario_id']) || $_SESSION['rol'] !== 'admin') {
-    header("Location: ../principal.php");
+    header("Location: ../index.php");
     exit();
 }
 
@@ -85,6 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <head>
     <meta charset="UTF-8" />
     <title>Gestión de Bases del Concurso</title>
+        <!-- Meta etiqueta para diseño responsive en dispositivos móviles -->
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <!-- Link al archivo css que aplica parte del estilo -->
     <link rel="stylesheet" href="../css/estilo.css">
@@ -167,8 +166,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </form>
         </main>
     </div>
-    <!-- Bootstrap JS Bundle -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 

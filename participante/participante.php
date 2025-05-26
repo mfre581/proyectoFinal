@@ -13,7 +13,7 @@ session_start();
 if (isset($_SESSION['usuario_id'])) {
     $usuario_id = $_SESSION['usuario_id'];
 } else {
-    header("Location: ../principal.php");  // Redirige si no está logueado
+    header("Location: ../index.php");  // Redirige si no está logueado
     exit();
 }
 
@@ -33,7 +33,7 @@ $nombre = $consulta->fetchColumn();
 
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Meta etiqueta para diseño responsive en dispositivos móviles -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Área de Participante</title>
     <!-- Link al archivo css que aplica parte del estilo -->

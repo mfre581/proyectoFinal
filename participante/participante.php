@@ -57,7 +57,7 @@ $nombre = $consulta->fetchColumn();
 
 
         <!-- Contenido principal -->
-        <div class="container mt-5">
+        <div class="container mt-4">
             <div class="text-center">
                 <h3 class="mb-4">¿Qué deseas hacer?</h3>
 

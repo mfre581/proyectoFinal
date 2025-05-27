@@ -102,7 +102,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['eliminar_id'])) {
 
 <body class="bg-light d-flex justify-content-center align-items-center min-vh-100 fondo2">
 
-    <div class="card shadow p-4" style="max-width: 900px; width: 100%;">
+    <div class="card shadow p-4" style="max-width: 780px; width: 100%;">
 
         <!-- Navbar con título y botón para volver -->
         <nav class="navbar navbar-dark">
@@ -112,60 +112,46 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['eliminar_id'])) {
             </div>
         </nav>
 
-        <!-- Contenido principal centrado-->
         <main class="container my-5">
             <?php if ($fotosProcesadas): ?>
-                <div class="table-responsive">
-                        <table class="table table-striped table-bordered align-middle text-center">
-                        <thead class="encabezado-tabla">
-                            <tr>
-                                <th>Imagen</th>
-                                <th>Estado</th>
-                                <th>Usuario</th>
-                                <th>Votos</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($fotosProcesadas as $foto): ?>
-                                <tr> <!-- Mostramos la imagen usando base64 -->
-                                    <td><img src="<?= $foto['imagen'] ?>" alt="Foto" class="img-thumbnail" style="max-width: 350px;"></td>
-                                    <td><strong><?= htmlspecialchars($foto['estado']) ?></strong></td>
-                                    <td>
-                                        <?= htmlspecialchars($foto['nombre'] . ' ' . $foto['apellido'])?><br>
-                                        <small class="text-muted"><?= htmlspecialchars($foto['email']) ?></small>
-                                    </td>
-                                    <td><?= (int)$foto['votos'] ?></td>
-                                    <td>
-                                        <div class="d-flex flex-column gap-2 justify-content-center h-100">
-                                            <!-- Formulario para aceptar la foto -->
-                                            <form method="POST" class="m-0">
-                                                <input type="hidden" name="aceptar" value="<?= $foto['foto_id'] ?>">
-                                                <button type="submit" class="btn btn-success btn-sm">Aceptar</button>
-                                            </form>
-                                            <!-- Formulario para rechazar la foto -->
-                                            <form method="POST" class="m-0">
-                                                <input type="hidden" name="rechazar" value="<?= $foto['foto_id'] ?>">
-                                                <button type="submit" class="btn btn-warning btn-sm">Rechazar</button>
-                                            </form>
-                                            <!-- Formulario para eliminar la foto -->
-                                            <form method="POST" onsubmit="return confirm('¿Eliminar esta foto?');" class="m-0">
-                                                <input type="hidden" name="eliminar_id" value="<?= $foto['foto_id'] ?>">
-                                                <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
-                                            </form>
-                                        </div>
+                <div class="d-flex flex-column gap-4">
+                    <?php foreach ($fotosProcesadas as $foto): ?>
+                        <div class="card p-3 d-flex flex-column flex-md-row align-items-center" style="gap: 1rem; min-height: 250px;">
+                            <!-- Imagen -->
+                            <img src="<?= $foto['imagen'] ?>" alt="Foto" class="img-fluid rounded" style="width: 100%; max-width: 400px; height: auto; object-fit: cover; flex-shrink: 0;">
 
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
+                            <!-- Contenido (datos + botones) -->
+                            <div class="d-flex flex-column flex-grow-1 justify-content-between" style="min-width: 0;">
+                                <div>
+                                    <p><strong>Estado:</strong> <?= htmlspecialchars($foto['estado']) ?></p>
+                                    <p><strong>Usuario:</strong> <?= htmlspecialchars($foto['nombre'] . ' ' . $foto['apellido']) ?></p>
+                                    <p><strong>Email:</strong> <?= htmlspecialchars($foto['email']) ?></p>
+                                    <p><strong>Votos:</strong> <?= (int)$foto['votos'] ?></p>
+                                </div>
+                                <div class="d-flex justify-content-start gap-2 flex-wrap mt-3">
+                                    <form method="POST" class="m-0">
+                                        <input type="hidden" name="aceptar" value="<?= $foto['foto_id'] ?>">
+                                        <button type="submit" class="btn btn-success btn-sm">Aceptar</button>
+                                    </form>
+                                    <form method="POST" class="m-0">
+                                        <input type="hidden" name="rechazar" value="<?= $foto['foto_id'] ?>">
+                                        <button type="submit" class="btn btn-warning btn-sm">Rechazar</button>
+                                    </form>
+                                    <form method="POST" onsubmit="return confirm('¿Eliminar esta foto?');" class="m-0">
+                                        <input type="hidden" name="eliminar_id" value="<?= $foto['foto_id'] ?>">
+                                        <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
                 </div>
             <?php else: ?>
                 <p class="text-center fs-5 mt-4">No hay fotografías para mostrar.</p>
             <?php endif; ?>
         </main>
-        <div class="text-center my-5">
+
+        <div class="text-center">
             <a href="#top" class="btn btn-warning">Volver arriba</a>
         </div>
     </div>

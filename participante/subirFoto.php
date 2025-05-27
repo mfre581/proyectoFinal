@@ -49,7 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['imagenBase64'])) {
   $base64Length = strlen($imagenBase64);
 
 
-/* Pasamos a calcular el tamaño aproximado real de la imagen
+  /* Pasamos a calcular el tamaño aproximado real de la imagen
  * Esto es necesario porque el navegador nos envía la imagen como una cadena Base64, que es más larga que los datos 
  * binarios reales. Para aplicar correctamente la validación del tamaño máximo permitido (en bytes), debemos estimar
  *  cuánto ocupará la imagen una vez decodificada, sin haberla decodificada aún
@@ -112,6 +112,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['imagenBase64'])) {
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
   <title>Subir foto</title>
@@ -177,9 +178,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['imagenBase64'])) {
             <button type="button" class="btn btn-outline-primary" onclick="applyFilter('invert')">Invertir colores</button>
           </div>
         </div>
-        <div class="text-center my-5">
+        <div class="text-center my-2">
           <!-- Botón de envío del formulario -->
-          <button type="submit" class="btn btn-success mt-3">Subir Imagen</button>
+          <button type="submit" class="btn btn-success">Subir Imagen</button>
         </div>
       </form>
 
@@ -197,7 +198,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['imagenBase64'])) {
      - Inserta la imagen codificada en un campo oculto del formulario para que PHP la procese.
     
       También contiene la función que gestiona el proceso de edición ------>
-   
+
 
   <script>
     // Obtenemos el elemento <canvas> donde se mostrará la imagen
@@ -206,11 +207,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['imagenBase64'])) {
     // Obtenemos el contexto 2D del canvas, que permite dibujar imágenes, formas, etc.
     const ctx = canvas.getContext('2d');
 
-  // Variable que almacenará una copia de la imagen original cargada en el canvas.
-  // Esto es necesario para poder restaurar la imagen original cada vez que se aplique un nuevo filtro.
+    // Variable que almacenará una copia de la imagen original cargada en el canvas.
+    // Esto es necesario para poder restaurar la imagen original cada vez que se aplique un nuevo filtro.
     let originalImage = null;
 
-   // Escuchar evento al cargar imagen
+    // Escuchar evento al cargar imagen
     document.getElementById('imagenInput').addEventListener('change', function(e) {
       const file = e.target.files[0];
 
@@ -223,15 +224,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['imagenBase64'])) {
         // Definimos qué hacer cuando el archivo se haya leído completamente
         reader.onload = function(event) {
 
-           // Creamos una nueva imagen HTML que cargará la imagen del archivo
+          // Creamos una nueva imagen HTML que cargará la imagen del archivo
           const img = new Image();
 
-             // Cuando la imagen se cargue completamente obtenemos el tamaño original de la imagen
+          // Cuando la imagen se cargue completamente obtenemos el tamaño original de la imagen
           img.onload = function() {
             const originalWidth = img.width;
             const originalHeight = img.height;
 
-             // Definimos un tamaño máximo permitido para mostrar en el canvas
+            // Definimos un tamaño máximo permitido para mostrar en el canvas
             const MAX_WIDTH = 800;
             const MAX_HEIGHT = 400;
 
@@ -245,9 +246,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['imagenBase64'])) {
             // Dibujamos la imagen original en el canvas
             ctx.drawImage(img, 0, 0, originalWidth, originalHeight);
 
-             // Escalamos visualmente el canvas para que no ocupe tanto espacio (solo cambia apariencia)
-            canvas.style.width = (originalWidth * ratio) + 'px';
-            canvas.style.height = (originalHeight * ratio) + 'px';
+            // ESCALADO VISUAL para que sea responsivo y no distorsione
+            canvas.style.width = '100%'; // que ocupe el ancho del contenedor padre
+            canvas.style.height = 'auto'; // mantenga proporción
 
             // Guardamos los datos de la imagen original tal como se cargó en el canvas.
             // Así podremos volver a este estado inicial antes de aplicar cada filtro.

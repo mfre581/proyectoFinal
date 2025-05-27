@@ -97,16 +97,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['fotoVotada'])) {
     <link rel="stylesheet" href="../css/estilo.css" />
     <!-- Carga de Bootstrap desde CDN (estilos) -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-
-    <style>
-        /* Cursor pointer para las imágenes en tarjetas */
-        .foto-card-img {
-            cursor: pointer;
-            object-fit: cover;
-            height: 300px;
-            width: 100%;
-        }
-    </style>
 </head>
 
 <body class="bg-light d-flex justify-content-center align-items-center min-vh-100 fondo1">
@@ -123,7 +113,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['fotoVotada'])) {
         </nav>
 
         <!-- Botón para ir a la página de estadísticas -->
-        <div class="text-center mt-3">
+        <div class="text-center mt-4">
             <a class="btn btn-success" href="../estadisticas/graficos.php">Ver estadísticas de las votaciones</a>
         </div>
 
@@ -136,7 +126,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['fotoVotada'])) {
                             <div class="card shadow-sm h-100">
                                 <!-- Imagen clicable para abrir modal -->
                                 <img src="<?= $foto['imagen'] ?>" alt="Foto participante"
-                                    class="card-img-top foto-card-img"
+                                    class="card-img-top ajustaFoto"
                                     data-bs-toggle="modal"
                                     data-bs-target="#modalFoto"
                                     data-foto="<?= htmlspecialchars($foto['imagen'], ENT_QUOTES) ?>"

@@ -45,3 +45,25 @@ thead.encabezado-tabla th {
   background-color: rgb(9, 18, 62);
   color: white;
 }
+
+/*Ajusta las fotos en "tuGaleria" y votoIP*/
+.ajustaFoto {
+  height: 200px;
+  object-fit: cover; /* Recorta sin deformar */
+  width: 100%;
+  cursor: pointer; /* añade el puntero */
+}
+
+/* Estilo para el canvas de la página de subida de foto: ajusta el tamaño del canvas para que sea responsivo,
+   manteniendo la proporción original de la imagen, limitando su tamaño máximo, centrando el elemento y evitando 
+   que la imagen se deforme */
+#previewCanvas {
+  width: 100%; /* Escala el ancho al 100% del contenedor */
+  height: auto; /* Mantiene proporción de alto automáticamente */
+  max-width: 800px; /* No pasa de 800px de ancho */
+  max-height: 400px; /* No pasa de 400px de alto */
+  border: 1px solid #ddd;
+  background-color: white;
+  display: block;
+  margin: 0 auto; /* Centrar horizontalmente */
+}

@@ -68,20 +68,11 @@ foreach ($fotosProcesadas as $foto) {
     <!-- Contenedor principal en forma de tarjeta -->
     <div class="card shadow p-4" style="max-width: 900px; width: 100%;">
 
-      
-        <!-- Barra de navegación 
-        <nav class="navbar navbar-dark">
-            <div class="container-fluid">
-                <h1 class="text-light fs-2 my-0">Estadísticas</h1>
-                <a href="../votaciones/votoIP.php" class="btn btn-outline-light">Volver</a>
-            </div>
-        </nav>-->
-
-          <!-- Barra de navegación superior -->
+        <!-- Barra de navegación superior -->
         <nav class="navbar navbar-expand-lg navbar-dark">
             <div class="container">
                 <!-- Título destacado del sitio -->
-                    <h1 class="text-light fs-2 my-0">Estadísticas</h1>
+                <h1 class="text-light fs-2 my-0">Fotos y votos actuales</h1>
 
                 <!-- Botón para móviles (hamburguesa) -->
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -91,35 +82,45 @@ foreach ($fotosProcesadas as $foto) {
                 <!-- Menú de navegación colapsable -->
                 <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                     <ul class="navbar-nav">
-                        <li class="nav-item"><a class="nav-link" href="#grafico">Gráfico</a></li>
                         <li class="nav-item"><a class="nav-link" href="../votaciones/votoIP.php">Volver a galería</a></li>
                     </ul>
                 </div>
             </div>
         </nav>
 
+        <!-- Botón para ir a la página de estadísticas -->
+        <div class="text-center mt-4">
+            <a class="btn btn-success" href="#grafico">Ver gráfico</a>
+        </div>
 
-        <div class="container">
-
+        <div class="container my-4">
             <!-- Galería de fotos con votos -->
-            <h2 class="m-4 text-center">Fotos y votos actuales</h2>
             <?php if ($fotosProcesadas): ?>
-                <div class="row justify-content-center">
+                <div class="row g-4 justify-content-center">
                     <?php foreach ($fotosProcesadas as $foto): ?>
-                        <div class="col-md-3 mb-4 text-center">
-                            <div class="card shadow-sm">
-                                <img src="<?= $foto['imagen'] ?>" class="card-img-top" alt="Foto <?= $foto['foto_id'] ?>">
-                                <div class="card-body">
-                                    <p class="card-text"><?= htmlspecialchars($foto['nombre'] . ' ' . $foto['apellido']) ?></p>
-                                    <p class="card-text"><strong>Votos:</strong> <?= $foto['votos'] ?></p>
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                            <div class="card shadow-sm h-100">
+
+                                <!-- 'card-img-top' clase bootsdtrap, posiciona la imagen en la parte superior de la tarjeta
+                                'ajustaFoto' es la clase personalizada que controla el tamaño de la imagen en el css-->
+                                <img src="<?= $foto['imagen'] ?>" class="card-img-top ajustaFoto" alt="Foto <?= $foto['foto_id'] ?>">
+
+                                <div class="card-body text-center d-flex flex-column">
+                                    <p class="card-text mb-1 fw-semibold">
+                                        <?= htmlspecialchars($foto['nombre'] . ' ' . $foto['apellido']) ?>
+                                    </p>
+                                    <p class="card-text text-primary">
+                                        <strong>Votos:</strong> <?= $foto['votos'] ?>
+                                    </p>
                                 </div>
                             </div>
                         </div>
                     <?php endforeach; ?>
                 </div>
             <?php else: ?>
-                <div class="alert alert-warning">No hay fotos aprobadas para mostrar.</div>
+                <div class="alert alert-warning text-center">No hay fotos aprobadas para mostrar.</div>
             <?php endif; ?>
+
 
             <!-- Gráfico de votos -->
             <h2 class="mt-5 text-center" id="grafico">Gráfico de votaciones</h2>

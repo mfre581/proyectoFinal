@@ -82,7 +82,7 @@ foreach ($fotosProcesadas as $foto) {
                 <!-- Menú de navegación colapsable -->
                 <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                     <ul class="navbar-nav">
-                        <li class="nav-item"><a class="nav-link" href="../votaciones/votoIP.php">Volver a galería</a></li>
+                        <li class="nav-item"><a class="nav-link" href="galeria.php">Volver a galería</a></li>
                     </ul>
                 </div>
             </div>
@@ -102,8 +102,8 @@ foreach ($fotosProcesadas as $foto) {
                             <div class="card shadow-sm h-100">
 
                                 <!-- 'card-img-top' clase bootsdtrap, posiciona la imagen en la parte superior de la tarjeta
-                                'ajustaFoto' es la clase personalizada que controla el tamaño de la imagen en el css-->
-                                <img src="<?= $foto['imagen'] ?>" class="card-img-top ajustaFoto" alt="Foto <?= $foto['foto_id'] ?>">
+                                'ajustaFoto2' es la clase personalizada que controla el tamaño de la imagen en el css (sin pointer)-->
+                                <img src="<?= $foto['imagen'] ?>" class="card-img-top ajustaFoto2" alt="Foto <?= $foto['foto_id'] ?>">
 
                                 <div class="card-body text-center d-flex flex-column">
                                     <p class="card-text mb-1 fw-semibold">

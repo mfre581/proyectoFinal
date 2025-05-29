@@ -46,12 +46,19 @@ thead.encabezado-tabla th {
   color: white;
 }
 
-/*Ajusta las fotos en "tuGaleria" y votoIP*/
+/*Ajusta las fotos en galeria.php*/
 .ajustaFoto {
   height: 200px;
   object-fit: cover; /* Recorta sin deformar */
   width: 100%;
   cursor: pointer; /* añade el puntero */
+}
+
+/*Ajusta las fotos en votos.php*/
+.ajustaFoto2 {
+  height: 200px;
+  object-fit: cover;
+  width: 100%;
 }
 
 /* Estilo para el canvas de la página de subida de foto: ajusta el tamaño del canvas para que sea responsivo,

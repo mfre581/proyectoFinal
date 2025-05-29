@@ -114,7 +114,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['fotoVotada'])) {
 
         <!-- Botón para ir a la página de estadísticas -->
         <div class="text-center mt-4">
-            <a class="btn btn-success" href="../estadisticas/graficos.php">Ver estadísticas de las votaciones</a>
+            <a class="btn btn-success" href="votos.php">Ver estadísticas de las votaciones</a>
         </div>
 
         <!-- Contenedor principal con tarjetas -->
@@ -124,7 +124,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['fotoVotada'])) {
                     <?php foreach ($fotosProcesadas as $foto): ?>
                         <div class="col-12 col-sm-6 col-md-4 col-lg-3">
                             <div class="card shadow-sm h-100">
-                                <!-- Imagen clicable para abrir modal -->
+
+                                <!-- Imagen clicable para abrir modal. Se aplica clase 'ajustafoto' para
+                                 controlar tamaño y añadir pointer desde el css-->
                                 <img src="<?= $foto['imagen'] ?>" alt="Foto participante"
                                     class="card-img-top ajustaFoto"
                                     data-bs-toggle="modal"

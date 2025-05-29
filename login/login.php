@@ -5,8 +5,8 @@
  * Permite a usuarios registrados iniciar sesión y ser redirigidos según su rol.
  */
 
-require_once("./utiles/variables.php");
-require_once("./utiles/funciones.php");
+require_once("../utiles/variables.php");
+require_once("../utiles/funciones.php");
 
 // Procesar datos enviados mediante POST
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -41,10 +41,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Redirigir según rol
             switch ($usuario["rol"]) {
                 case 'admin':
-                    header("Location: ./administrador/administrador.php");
+                    header("Location: ../administrador/administrador.php");
                     break;
                 case 'participante':
-                    header("Location: ./participante/participante.php");
+                    header("Location: ../participante/participante.php");
                     break;
                 default:
                     $errores[] = "Rol desconocido";
@@ -68,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <!-- Meta etiqueta para diseño responsive en dispositivos móviles -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Link al archivo css que aplica parte del estilo -->
-    <link rel="stylesheet" href="./css/estilo.css">
+    <link rel="stylesheet" href="../css/estilo.css">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
@@ -82,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <nav class="navbar navbar-dark">
             <div class="container">
                 <a class="navbar-brand fs-3 fw-bold" href="./index.php">Retales Urbanos</a>
-                <a href="./index.php" class="btn btn-outline-light btn-sm">Volver</a>
+                <a href="../index.php" class="btn btn-outline-light btn-sm">Volver</a>
             </div>
         </nav>
 

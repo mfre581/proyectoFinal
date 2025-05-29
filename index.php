@@ -28,7 +28,7 @@ $puede_participar = ($hoy >= $fecha_inicio && $hoy <= $fecha_fin);
 if (isset($_GET['intentoRegistro'])) {
     if ($puede_participar) {
         // Redirige al registro si está dentro del plazo
-        header("Location: registro.php");
+        header("Location: ../registro/registro.php");
         exit();
     } else {
         // Si está fuera de plazo, agrega mensaje personalizado al array de errores
@@ -84,7 +84,7 @@ if (isset($_GET['intentoRegistro'])) {
                 <!-- Menú de navegación colapsable -->
                 <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                     <ul class="navbar-nav">
-                        <li class="nav-item"><a class="nav-link" href="./login.php">Login</a></li>
+                        <li class="nav-item"><a class="nav-link" href="../login/login.php">Login</a></li>
 
                     <!-- Al seleccionarlo, se envia la señal para hacer la comprobación de fecha (intentoRegistro=1)-->
                         <li class="nav-item"><a class="nav-link" href="index.php?intentoRegistro=1">Registro</a></li>
@@ -97,7 +97,7 @@ if (isset($_GET['intentoRegistro'])) {
 
         <!-- Botón para acceder a la votación -->
         <div class="my-4 text-center">
-            <a class="btn btn-primary" href="./votaciones/votoIP.php">Entra a la galería para votar</a>
+            <a class="btn btn-primary" href="./galeria_votos/galeria.php">Entra a la galería para votar</a>
         </div>
 
         <!-- Imagen representativa del concurso -->

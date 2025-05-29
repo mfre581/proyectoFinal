@@ -1,12 +1,12 @@
 <?php
-	// Definición de variables 
+// Definición de variables 
 	//$host = "192.168.115.219";	// Clase
 	$host = "192.168.1.139";		// Casa
 	$user = "pepito01";
 	$password = "pepito01";
 	//$bbdd = "Plataformadb";// Clase
 	$bbdd = "proyecto";// Casa
-/*
+/*	
 	//byethost
 	$host = "sql204.byethost9.com"; // El host de MySQL (te lo da ByetHost)
 	$user = "b9_38835195";          // Tu nombre de usuario de MySQL (también te lo da ByetHost)
@@ -27,8 +27,8 @@
 	$user = "if0_39059633";          
 	$password = "oeWvaaUIf98zr";        
 	$bbdd = "if0_39059633_rallybd2"; 
-*/
 
+*/
 
 
 

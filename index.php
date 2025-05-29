@@ -15,6 +15,31 @@ $conexion = conectarPDO($host, $user, $password, $bbdd);
 // Obtiene las bases del concurso desde la base de datos
 $consulta = $conexion->query("SELECT * FROM bases_concurso");
 $bases = $consulta->fetch(PDO::FETCH_ASSOC);
+
+$errores = [];
+
+// Control de fechas para la participación
+$hoy = date("Y-m-d");
+$fecha_inicio = $bases['fecha_inicio'];
+$fecha_fin = $bases['fecha_fin'];
+$puede_participar = ($hoy >= $fecha_inicio && $hoy <= $fecha_fin);
+
+//  Si se recibe un intento de registro, hacemos la comprobación de fecha
+if (isset($_GET['intentoRegistro'])) {
+    if ($puede_participar) {
+        // Redirige al registro si está dentro del plazo
+        header("Location: registro.php");
+        exit();
+    } else {
+        // Si está fuera de plazo, agrega mensaje personalizado al array de errores
+        if ($hoy < $fecha_inicio) {
+            $errores[] = "⏳ Aún no ha comenzado el período de participación. Comienza el $fecha_inicio.";
+        } elseif ($hoy > $fecha_fin) {
+            $errores[] = "Lo sentimos! El plazo de participación finalizó el $fecha_fin.";
+        }
+    }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -36,6 +61,15 @@ $bases = $consulta->fetch(PDO::FETCH_ASSOC);
     <!-- Contenedor principal en forma de tarjeta -->
     <div class="card shadow p-4" style="max-width: 900px; width: 100%;">
 
+        <!-- Se muestra el mensaje de error si se intenta registrar fuera de plazo -->
+        <?php if (!empty($errores)): ?>
+            <div class="alert alert-warning text-center">
+                <?php foreach ($errores as $error): ?>
+                    <p><?= htmlspecialchars($error) ?></p>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
+
         <!-- Barra de navegación superior -->
         <nav class="navbar navbar-expand-lg navbar-dark">
             <div class="container">
@@ -51,7 +85,10 @@ $bases = $consulta->fetch(PDO::FETCH_ASSOC);
                 <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                     <ul class="navbar-nav">
                         <li class="nav-item"><a class="nav-link" href="./login.php">Login</a></li>
-                        <li class="nav-item"><a class="nav-link" href="./registro.php">Registro</a></li>
+
+                    <!-- Al seleccionarlo, se envia la señal para hacer la comprobación de fecha (intentoRegistro=1)-->
+                        <li class="nav-item"><a class="nav-link" href="index.php?intentoRegistro=1">Registro</a></li>
+
                         <li class="nav-item"><a class="nav-link" href="#bases">El concurso</a></li>
                     </ul>
                 </div>
@@ -61,7 +98,6 @@ $bases = $consulta->fetch(PDO::FETCH_ASSOC);
         <!-- Botón para acceder a la votación -->
         <div class="my-4 text-center">
             <a class="btn btn-primary" href="./votaciones/votoIP.php">Entra a la galería para votar</a>
-
         </div>
 
         <!-- Imagen representativa del concurso -->
@@ -89,14 +125,16 @@ $bases = $consulta->fetch(PDO::FETCH_ASSOC);
                     📸 <strong>Sube tu mejor foto</strong> y compártela con el mundo. Una vez aprobada, aparecerá en la galería principal donde podrá ser votada por todos los visitantes. ¡Demuestra tu talento!
                 </p>
 
-                <!-- Datos extraídos dinámicamente desde la base de datos -->
+                <!-- Datos de la consulta sobre las bases del concurso -->
                 <p><strong>Máximo de fotos por persona:</strong> <?= $bases['max_fotos'] ?></p>
                 <p><strong>Tamaño máximo de foto:</strong> <?= $bases['max_tamano_mb'] ?> MB</p>
                 <p><strong>Inicio de participación:</strong> <?= $bases['fecha_inicio'] ?></p>
                 <p><strong>Fin de participación:</strong> <?= $bases['fecha_fin'] ?></p>
                 <p><strong>Inicio de votaciones:</strong> <?= $bases['fecha_votacion'] ?></p>
+
                 <div class="text-center mt-3">
-                    <a class="btn btn-primary" href="./registro.php" style="max-width: 300px; width: 100%;">Regístrate para participar! 📸</a>
+                        <!-- Misma lógica que en el enlace de registro del navbar -->
+                    <a class="btn btn-primary" href="index.php?intentoRegistro=1" style="max-width: 300px; width: 100%;">Regístrate para participar! 📸</a>
                 </div>
 
 

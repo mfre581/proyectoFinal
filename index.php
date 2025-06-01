@@ -48,12 +48,12 @@ if (isset($_GET['intentoRegistro'])) {
 <head>
     <meta charset="UTF-8">
     <title>Principal</title>
+    <!-- Carga de Bootstrap desde CDN (estilos) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Link al archivo css que aplica parte del estilo -->
     <link rel="stylesheet" href="./css/estilo.css">
     <!-- Meta para hacer la web responsive -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- Carga de Bootstrap desde CDN (estilos) -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
 <body class="bg-light d-flex justify-content-center align-items-center min-vh-100 fondo1">
@@ -86,7 +86,7 @@ if (isset($_GET['intentoRegistro'])) {
                     <ul class="navbar-nav">
                         <li class="nav-item"><a class="nav-link" href="../login/login.php">Login</a></li>
 
-                    <!-- Al seleccionarlo, se envia la señal para hacer la comprobación de fecha (intentoRegistro=1)-->
+                        <!-- Al seleccionarlo, se envia la señal para hacer la comprobación de fecha (intentoRegistro=1)-->
                         <li class="nav-item"><a class="nav-link" href="index.php?intentoRegistro=1">Registro</a></li>
 
                         <li class="nav-item"><a class="nav-link" href="#bases">El concurso</a></li>
@@ -97,20 +97,20 @@ if (isset($_GET['intentoRegistro'])) {
 
         <!-- Botón para acceder a la votación -->
         <div class="my-4 text-center">
-            <a class="btn btn-primary" href="./galeria_votos/galeria.php">Entra a la galería para votar</a>
+            <a class="btn estiloBoton" href="./galeria_votos/galeria.php">Entra a la galería para votar</a>
         </div>
 
         <!-- Imagen representativa del concurso -->
         <div class="container mb-4">
             <div class="card shadow-sm overflow-hidden">
                 <!-- Imagen con altura máxima limitada para evitar que ocupe demasiado espacio -->
-                <img src="./img/fotoPortada.jpg" alt="imagen" class="card-img-top img-fluid rounded"
+                <img src="./img/fotoPortada.jpg" alt="imagen"
                     style="max-height: 400px; object-fit: cover;">
             </div>
         </div>
 
         <!-- Sección con el texto de introducción al concurso -->
-        <div class="container mb-5 " id="bases">
+        <div class="container mb-4" id="bases">
             <div class="card p-4 shadow-sm text-center card-intro" style="max-width: 600px; margin: 0 auto;">
                 <p>Retales Urbanos es un concurso de fotografía que invita a <strong>capturar la ciudad desde una mirada personal y única.</strong> No buscamos postales perfectas, sino fragmentos auténticos: una esquina olvidada, una escena inesperada, una sombra que cuenta una historia. Cada imagen debe ser un retal —pequeño pero significativo— que revele cómo ves y sientes tu entorno urbano. <strong>Tu cámara es tu mirada. Tu ciudad, tu expresión.</strong></p>
             </div>
@@ -133,18 +133,18 @@ if (isset($_GET['intentoRegistro'])) {
                 <p><strong>Inicio de votaciones:</strong> <?= $bases['fecha_votacion'] ?></p>
 
                 <div class="text-center mt-3">
-                        <!-- Misma lógica que en el enlace de registro del navbar -->
-                    <a class="btn btn-primary" href="index.php?intentoRegistro=1" style="max-width: 300px; width: 100%;">Regístrate para participar! 📸</a>
+                    <!-- Misma lógica que en el enlace de registro del navbar -->
+                    <a class="btn btn-primary" href="index.php?intentoRegistro=1">Regístrate para participar! 📸</a>
                 </div>
-
-
             </div>
-            <!-- Botón para volver arriba de la página -->
+
+            <!-- Botón para volver al principio de la página -->
             <div class="text-center my-4">
-                <a href="#top" class="btn btn-success">Volver arriba</a>
+                <a href="#top" class="btn estiloBoton2">Subir</a>
             </div>
         </div>
     </div>
+    
     <!-- Carga del JS de Bootstrap (necesario para menú responsive) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>

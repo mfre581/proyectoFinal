@@ -10,13 +10,13 @@ require_once("../utiles/variables.php");
 require_once("../utiles/funciones.php");
 session_start();
 
-// Verificamos que el usuario está logueado y es administrador
+// Verifica que el usuario es administrador, si no redirige a index
 if (!isset($_SESSION['usuario_id']) || $_SESSION['rol'] !== 'admin') {
     header("Location: ../index.php");  // Redirigimos si no tiene permiso
     exit();
 }
 
-// Conectamos a la base de datos con PDO
+// Conectamos a la base de datos 
 $conexion = conectarPDO($host, $user, $password, $bbdd);
 
 // Obtener las fotografías en el orden determinado, y junto con los datos del usuario que las subió
@@ -94,33 +94,82 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['eliminar_id'])) {
     <title>Gestión de Fotografías</title>
     <!-- Meta etiqueta para diseño responsive en dispositivos móviles -->
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <!-- Link al archivo css que aplica parte del estilo -->
-    <link rel="stylesheet" href="../css/estilo.css">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Link al archivo css que aplica parte del estilo -->
+    <link rel="stylesheet" href="../css/estilo.css">
 </head>
+
+<!-- Establece el estilo general de la página -->
 
 <body class="bg-light d-flex justify-content-center align-items-center min-vh-100 fondo2">
 
+    <!-- Contenedor principal en forma de tarjeta -->
     <div class="card shadow p-4" style="max-width: 780px; width: 100%;">
 
-        <!-- Navbar con título y botón para volver -->
-        <nav class="navbar navbar-dark">
+        <!-- Barra de navegación-->
+        <nav class="navbar navbar-dark navbar-expand-lg">
             <div class="container">
-                <span class="navbar-brand fs-3 fw-bold">Gestión de Fotografías</span>
-                <a href="./administrador.php" class="btn btn-outline-light">Volver</a>
+
+                <span class="navbar-brand fs-2 fw-bold">Gestión de Fotografías</span>
+
+                <!-- Botón hamburguesa para móviles -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Navbar colapsable -->
+                <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item"> <a class="nav-link" href="administrador.php">Tu panel </a></li>
+                        <li class="nav-item"> <a class="nav-link" href="../cerrarSesion/cerrar_sesion.php">Cerrar sesión</a></li>
+                    </ul>
+                </div>
             </div>
         </nav>
 
-        <main class="container my-5">
+        <!-- Contenido principal -->
+        <main class="container my-4">
+
+            <!-- Botones para saltar a las secciones -->
+            <div class="mb-4 d-flex justify-content-center gap-2">
+                <a href="#aprobadas" class="btn btn-primary">Ver Fotos Aprobadas</a>
+                <a href="#rechazadas" class="btn btn-warning">Ver Fotos Rechazadas</a>
+            </div>
+
+            <!-- Comprueba si hay fotos procesadas para mostrar -->
             <?php if ($fotosProcesadas): ?>
                 <div class="d-flex flex-column gap-4">
-                    <?php foreach ($fotosProcesadas as $foto): ?>
-                        <div class="card p-3 d-flex flex-column flex-md-row align-items-center" style="gap: 1rem; min-height: 250px;">
-                            <!-- Imagen -->
+
+                    <?php
+                    // Establecemos las variables que determinan la primera foto con el estado correspondientes
+                    $primerAprobada = true;
+                    $primerRechazada = true;
+                    ?>
+
+                    <?php foreach ($fotosProcesadas as $foto):
+
+                        // Asignamos el ID solo a la primera foto de cada estado relevante
+                        $id = "";
+                        if ($foto['estado'] === 'aprobada' && $primerAprobada) {
+                            $id = "aprobadas";   // Ancla para fotos aprobadas
+                            $primerAprobada = false;
+                        } elseif ($foto['estado'] === 'rechazada' && $primerRechazada) {
+                            $id = "rechazadas";  // Ancla para fotos rechazadas
+                            $primerRechazada = false;
+                        }
+                    ?>
+
+                        <!-- Tarjeta para mostrar cada foto con su información -->
+                        <div class="card p-3 d-flex flex-column flex-md-row align-items-center" style="gap: 1rem; min-height: 250px;"
+                            <?php if ($id !== "") echo 'id="' . $id . '"'; ?>><!-- Aquí añade el id al div generado 
+                                                                                 para el ancla -->
+
+                            <!-- Imagen de la foto subida -->
                             <img src="<?= $foto['imagen'] ?>" alt="Foto" class="img-fluid rounded" style="width: 100%; max-width: 400px; height: auto; object-fit: cover; flex-shrink: 0;">
 
-                            <!-- Contenido (datos + botones) -->
+                            <!-- Información del usuario y acciones -->
                             <div class="d-flex flex-column flex-grow-1 justify-content-between" style="min-width: 0;">
                                 <div>
                                     <p><strong>Estado:</strong> <?= htmlspecialchars($foto['estado']) ?></p>
@@ -128,6 +177,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['eliminar_id'])) {
                                     <p><strong>Email:</strong> <?= htmlspecialchars($foto['email']) ?></p>
                                     <p><strong>Votos:</strong> <?= (int)$foto['votos'] ?></p>
                                 </div>
+
+                                <!-- Área de botones para aceptar, rechazar o eliminar la foto -->
                                 <div class="d-flex justify-content-start gap-2 flex-wrap mt-3">
                                     <form method="POST" class="m-0">
                                         <input type="hidden" name="aceptar" value="<?= $foto['foto_id'] ?>">
@@ -151,10 +202,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['eliminar_id'])) {
             <?php endif; ?>
         </main>
 
-        <div class="text-center">
-            <a href="#top" class="btn btn-warning">Volver arriba</a>
+        <!-- Botón para volver al principio de la página -->
+        <div class="text-center my-4">
+            <a href="#top" class="btn estiloBoton2">Subir</a>
         </div>
     </div>
+
+    <!-- Bootstrap JS para el navbar colapsable -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 

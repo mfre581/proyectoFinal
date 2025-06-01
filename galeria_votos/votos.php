@@ -55,10 +55,10 @@ foreach ($fotosProcesadas as $foto) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Estadísticas</title>
-    <!-- Link al archivo css que aplica parte del estilo -->
-    <link rel="stylesheet" href="../css/estilo.css">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Link al archivo css que aplica parte del estilo -->
+    <link rel="stylesheet" href="../css/estilo.css">
     <!-- Chart.js para gráficos -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -68,10 +68,9 @@ foreach ($fotosProcesadas as $foto) {
     <!-- Contenedor principal en forma de tarjeta -->
     <div class="card shadow p-4" style="max-width: 900px; width: 100%;">
 
-        <!-- Barra de navegación superior -->
+        <!-- Barra de navegación-->
         <nav class="navbar navbar-expand-lg navbar-dark">
             <div class="container">
-                <!-- Título destacado del sitio -->
                 <h1 class="text-light fs-2 my-0">Fotos y votos actuales</h1>
 
                 <!-- Botón para móviles (hamburguesa) -->
@@ -82,16 +81,13 @@ foreach ($fotosProcesadas as $foto) {
                 <!-- Menú de navegación colapsable -->
                 <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                     <ul class="navbar-nav">
-                        <li class="nav-item"><a class="nav-link" href="galeria.php">Volver a galería</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#grafico">Ver Gráfico</a></li>
+                        <li class="nav-item"><a class="nav-link" href="galeria.php">Galería</a></li>
+                        <li class="nav-item"><a class="nav-link" href="../index.php">Principal</a></li>
                     </ul>
                 </div>
             </div>
         </nav>
-
-        <!-- Botón para ir a la página de estadísticas -->
-        <div class="text-center mt-4">
-            <a class="btn btn-success" href="#grafico">Ver gráfico</a>
-        </div>
 
         <div class="container my-4">
             <!-- Galería de fotos con votos -->
@@ -131,9 +127,9 @@ foreach ($fotosProcesadas as $foto) {
                 </div>
             </div>
 
-            <!-- Botón de volver arriba -->
-            <div class="text-center my-5">
-                <a href="#top" class="btn btn-success">Volver arriba</a>
+            <!-- Botón para volver al principio de la página -->
+            <div class="text-center my-4">
+                <a href="#top" class="btn estiloBoton2">Subir</a>
             </div>
 
         </div>
@@ -169,7 +165,7 @@ foreach ($fotosProcesadas as $foto) {
 
 
 
-    <!-- Bootstrap JS (opcional) -->
+    <!-- Bootstrap JS para el navbar colapsable -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>

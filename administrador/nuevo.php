@@ -9,14 +9,16 @@ require_once("../utiles/variables.php");
 require_once("../utiles/funciones.php");
 session_start();
 
-// Verifica que el usuario es administrador
+// Verifica que el usuario es administrador, si no redirige a index
 if (!isset($_SESSION['usuario_id']) || $_SESSION['rol'] !== 'admin') {
     header("Location: ../index.php");
     exit();
 }
 
+// Conectamos a la base de datos
 $conexion = conectarPDO($host, $user, $password, $bbdd);
 
+// Iniciamos variables
 $errores = [];
 $email = $_POST["email"] ?? "";
 $clave = $_POST["password"] ?? "";
@@ -56,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 
-    // Validar contraseña (fuera del else para que siempre se valide)
+    // Validar contraseña 
     if (empty($clave)) {
         $errores[] = "La contraseña es obligatoria.";
     } elseif (strlen($clave) < 5 || strlen($clave) > 20) {
@@ -80,6 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $insert_usuario->bindParam(':rol', $rol);
             $insert_usuario->bindParam(':password', $passwordHash);
 
+            // Mensajes informativos
             if ($insert_usuario->execute()) {
                 echo "<script>alert('Usuario registrado correctamente.'); window.location.href='./gestionUsuarios.php';</script>";
             } else {
@@ -117,12 +120,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <nav class="navbar navbar-dark">
             <div class="container">
                 <span class="navbar-brand fs-3 fw-bold">Añadir usuario</span>
-                <a href="./administrador.php" class="btn btn-outline-light">Volver</a>
+                <ul class="navbar-nav">
+                    <li class="nav-item"> <a class="nav-link" href="administrador.php">Principal</a></li>
+                </ul>
             </div>
         </nav>
 
         <!-- Contenedor principal -->
-        <main class="container my-5">
+        <main class="container my-4">
 
             <!-- Mostrar errores si existen -->
             <?php if (!empty($errores)): ?>
@@ -140,19 +145,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                 <div class="mb-3">
                     <label for="nombre" class="form-label">Nombre:</label>
-                    <input type="text" name="nombre" id="nombre" class="form-control" 
+                    <input type="text" name="nombre" id="nombre" class="form-control"
                         value="<?= htmlspecialchars($nombre) ?>">
                 </div>
 
                 <div class="mb-3">
                     <label for="apellido" class="form-label">Apellido:</label>
-                    <input type="text" name="apellido" id="apellido" class="form-control" 
+                    <input type="text" name="apellido" id="apellido" class="form-control"
                         value="<?= htmlspecialchars($apellido) ?>">
                 </div>
 
                 <div class="mb-3">
                     <label for="email" class="form-label">Correo electrónico:</label>
-                    <input type="email" name="email" id="email" class="form-control" 
+                    <input type="email" name="email" id="email" class="form-control"
                         value="<?= htmlspecialchars($email) ?>">
                 </div>
 

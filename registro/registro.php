@@ -78,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             if ($insert_usuario->execute()) {
                 // Registro exitoso: aviso y redirección al login
-                echo "<script>alert('Te has registrado correctamente. Ya puedes acceder como usuario!'); window.location.href='../login.php';</script>";
+                echo "<script>alert('Te has registrado correctamente. Ya puedes acceder como usuario!'); window.location.href='../login/login.php';</script>";
             } else {
                 $errores[] = "Error al registrar el usuario.";
             }
@@ -111,19 +111,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <!-- Contenedor principal en forma de tarjeta -->
     <div class="card shadow p-4" style="max-width: 480px; width: 100%;">
 
-        <!-- Barra de navegación -->
-        <nav class="navbar navbar-dark">
-            <div class="container-fluid">
-                <a class="navbar-brand fs-3 fw-bold" href="./index.php">Retales Urbanos</a>
-                <a href="../index.php" class="btn btn-outline-light btn-sm">Volver</a>
+        <!-- Barra de navegación-->
+        <nav class="navbar navbar-dark navbar-expand-lg">
+            <div class="container">
+        
+                <span class="navbar-brand fs-4 fw-bold">Introduce tus datos</span>
+
+                <!-- Botón hamburguesa para móviles -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Navbar colapsable -->
+                <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item"> <a class="nav-link" href="../index.php">Principal</a></li>
+                    </ul>
+                </div>
             </div>
         </nav>
 
         <!-- Contenido de la tarjeta -->
         <div class="mt-4">
 
-            <h2 class="mb-4 text-center">Registro</h2>
-
+     
             <!-- Mostrar errores si existen -->
             <?php if (!empty($errores)) : ?>
                 <div class="alert alert-danger" role="alert">
@@ -162,7 +174,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </div>
     </div>
 
-    <!-- Bootstrap JS para funcionalidades como menú responsive -->
+    <!-- Bootstrap JS para el navbar colapsable -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>

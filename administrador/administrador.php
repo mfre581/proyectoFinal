@@ -12,14 +12,14 @@ require_once("../utiles/variables.php");
 require_once("../utiles/funciones.php");
 session_start();
 
-// Verifica si el usuario está logueado y es administrador
-if (isset($_SESSION['usuario_id']) && isset($_SESSION['rol']) && $_SESSION['rol'] === 'admin') {
-    $usuario_id = $_SESSION['usuario_id'];
-} else {
-    // Si no es administrador, redirige a la página principal
+// Verifica que el usuario es administrador, si no redirige a index
+if (!isset($_SESSION['usuario_id']) || $_SESSION['rol'] !== 'admin') {
     header("Location: ../index.php");
     exit();
 }
+
+//Asignamos el nombre del usuario para la bienvenida
+$usuario_id = $_SESSION['usuario_id'];
 
 // Conectar base de datos y obtener nombre del usuario admin
 $conexion = conectarPDO($host, $user, $password, $bbdd);
@@ -44,20 +44,24 @@ $nombre = $consulta->fetchColumn();
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
 </head>
 
+<!-- Establece el estilo general de la página -->
+
 <body class="bg-light d-flex justify-content-center align-items-center min-vh-100 fondo2">
 
     <!-- Contenedor principal en forma de tarjeta -->
     <div class="card shadow p-4" style="max-width: 900px; width: 100%;">
 
-        <!-- Barra de navegación -->
+        <!-- Encabezado y navbar -->
         <nav class="navbar navbar-dark">
             <div class="container">
-                <h2 class="text-light fs-2 my-0">Bienvenid@, <?= htmlspecialchars($nombre) ?></h2>
-                <a href="../cerrarSesion/cerrar_sesion.php" class="btn btn-outline-light">Cerrar sesión</a>
+                <h2 class="text-light fs-3 my-0">Bienvenid@ a tu panel, <?= htmlspecialchars($nombre) ?></h2>
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link" href="../cerrarSesion/cerrar_sesion.php">Cerrar sesión</a></li>
+                </ul>
             </div>
         </nav>
 
-        <!-- Contenido principal -->
+        <!-- Contenido principal, donde el administrador puede escoger entre diferentes opciones -->
         <main class="container my-5">
             <h3 class="mb-5">Elige qué deseas hacer</h3>
             <div class="d-grid gap-3 col-6 mx-auto">
@@ -67,7 +71,7 @@ $nombre = $consulta->fetchColumn();
             </div>
         </main>
     </div>
-    
+
 </body>
 
 </html>

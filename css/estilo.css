@@ -27,16 +27,16 @@
   color: white; /* Asegura que el texto siga siendo blanco */
 }
 
-/*Estilo para los botones "Subir"*/
+/*Estilo para los botones "↑ Top"*/
 .estiloBoton2 {
   font-family: "Work Sans", sans-serif;
-  color: white;
-  background-color: #adb5bd; /* Cambia el color de fondo */
+  color: rgb(255, 255, 255);
+  background-color: #8d1b89; /* Cambia el color de fondo */
   border-radius: 12px; /* Bordes redondeados */
 }
 
 .estiloBoton2:hover {
-  background-color: #7d6c67; /* Un tono más claro de #b92f04 */
+  background-color: #dc46f7; /* Un tono más claro de #b92f04 */
   color: white; /* Asegura que el texto siga siendo blanco */
 }
 

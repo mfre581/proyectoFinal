@@ -131,7 +131,7 @@ if (isset($_GET['intentoRegistro'])) {
                 <p><strong>Inicio de participación:</strong> <?= $bases['fecha_inicio'] ?></p>
                 <p><strong>Fin de participación:</strong> <?= $bases['fecha_fin'] ?></p>
                 <p><strong>Inicio de votaciones:</strong> <?= $bases['fecha_votacion'] ?></p>
-
+                <p><strong>Fin de votaciones:</strong> <?= $bases['fecha_fin_votacion'] ?></p>
                 <div class="text-center mt-3">
                     <!-- Misma lógica que en el enlace de registro del navbar -->
                     <a class="btn btn-primary" href="index.php?intentoRegistro=1">Regístrate para participar! 📸</a>

@@ -38,7 +38,14 @@ foreach ($fotos as $foto) {
 
 // Procesar la eliminación de una foto
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['eliminar_id'])) {
+    
+    // Asignamos el id de la foto a eliminar
     $foto_id = $_POST['eliminar_id'];
+
+    // Eliminamos los votos asociados a la foto
+    $deleteVotos = $conexion->prepare("DELETE FROM ip_votos WHERE foto_id = :foto_id");
+    $deleteVotos->execute(['foto_id' => $foto_id]);
+
     $consultaBorrar = "DELETE FROM fotografias WHERE foto_id = :foto_id AND usuario_id = :usuario_id";
     $delete = $conexion->prepare($consultaBorrar);
     $delete->bindParam(':foto_id', $foto_id);
@@ -111,6 +118,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['eliminar_id'])) {
                                     <!-- Imagen de la foto con activador de modal al hacer clic -->
                                     <img src="<?= $foto['imagen'] ?>" alt="Foto subida"
                                         class="card-img-top ajustaFoto"
+                                        loading="lazy"
                                         data-bs-toggle="modal"
                                         data-bs-target="#modalFoto"
                                         data-foto="<?= htmlspecialchars($foto['imagen'], ENT_QUOTES) ?>"
@@ -137,10 +145,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['eliminar_id'])) {
                     </div>
                 <?php endif; ?>
 
-                <!-- Botón para volver al principio de la página -->
-                <div class="text-center my-4">
-                    <a href="#top" class="btn estiloBoton2">Subir</a>
-                </div>
+                <?php if (count($fotosProcesadas) > 2): ?>
+                    <!-- Botón visible solo en móviles si hay más de 2 fotos -->
+                    <div class="text-center my-4 d-block d-md-none">
+                        <a href="#top" class="btn btn-sm estiloBoton2">↑ Volver arriba</a>
+                    </div>
+                <?php endif; ?>
         </div>
 
         <!-- Modal para mostrar la foto grande -->
@@ -162,24 +172,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['eliminar_id'])) {
             </div>
         </div>
 
-
         <!-- Bootstrap JS para la imagen del modal y el menú colapsable -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-        <script>
-            // Referencias al modal y a su imagen 
-            const modalFoto = document.getElementById('modalFoto');
-            const modalImagen = document.getElementById('modalImagen');
-
-            // Evento que se ejecuta cuando se va a mostrar el modal
-            modalFoto.addEventListener('show.bs.modal', event => {
-                const trigger = event.relatedTarget;
-
-                // Establece la imagen y su alt desde los atributos del elemento clicado
-                modalImagen.src = trigger.getAttribute('data-foto');
-                modalImagen.alt = trigger.getAttribute('data-alt');
-            });
-        </script>
+        <!-- Script personalizado para manejar el modal -->
+        <script src="../js/modal.js"></script>
 
 </body>
 

@@ -28,15 +28,28 @@ $conexion = conectarPDO($host, $user, $password, $bbdd);
 if (isset($_GET['eliminar_id'])) {
     $eliminar_id = $_GET['eliminar_id'];
     try {
+         // Primero obtenemos IDs de las fotos del usuario para poder borrar sus votos asociados
+        $stmtFotos = $conexion->prepare("SELECT foto_id FROM fotografias WHERE usuario_id = :id");
+        $stmtFotos->execute(['id' => $eliminar_id]);
+        $fotos = $stmtFotos->fetchAll(PDO::FETCH_COLUMN);
+
+        if ($fotos) {
+            // Se eliminan los votos asociados a esas fotos
+            $votos = str_repeat('?,', count($fotos) - 1) . '?';
+            $deleteVotos = $conexion->prepare("DELETE FROM ip_votos WHERE foto_id IN ($votos)");
+            $deleteVotos->execute($fotos);
+        }
+
+        // Eliminar fotos
         $deleteFotos = "DELETE FROM fotografias WHERE usuario_id = :id";
         $stmt = $conexion->prepare($deleteFotos);
-        $stmt->bindParam(':id', $eliminar_id);
-        $stmt->execute();
+        $stmt->execute(['id' => $eliminar_id]);
 
+        // Eliminar usuario
         $deleteUsuario = "DELETE FROM usuarios WHERE usuario_id = :id";
         $stmt = $conexion->prepare($deleteUsuario);
-        $stmt->bindParam(':id', $eliminar_id);
-        $stmt->execute();
+        $stmt->execute(['id' => $eliminar_id]);
+
 
         // Alerts que muestran mensaje de eliminación exitosas o fallidas
         echo "<script>alert('Usuario eliminado correctamente.'); window.location.href='gestionUsuarios.php';</script>";

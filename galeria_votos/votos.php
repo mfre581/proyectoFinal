@@ -99,7 +99,7 @@ foreach ($fotosProcesadas as $foto) {
 
                                 <!-- 'card-img-top' clase bootsdtrap, posiciona la imagen en la parte superior de la tarjeta
                                 'ajustaFoto2' es la clase personalizada que controla el tamaño de la imagen en el css (sin pointer)-->
-                                <img src="<?= $foto['imagen'] ?>" class="card-img-top ajustaFoto2" alt="Foto <?= $foto['foto_id'] ?>">
+                                <img src="<?= $foto['imagen'] ?>" class="card-img-top ajustaFoto2" alt="Foto <?= $foto['foto_id'] ?>" loading="lazy">
 
                                 <div class="card-body text-center d-flex flex-column">
                                     <p class="card-text mb-1 fw-semibold">
@@ -128,45 +128,29 @@ foreach ($fotosProcesadas as $foto) {
             </div>
 
             <!-- Botón para volver al principio de la página -->
-            <div class="text-center my-4">
-                <a href="#top" class="btn estiloBoton2">Subir</a>
+            <div id="btnVolverArriba" class="text-center my-4 d-none">
+                <a href="#top" class="btn btn-sm estiloBoton2">↑ Volver arriba</a>
             </div>
 
         </div>
     </div>
-    <!-- Script para generar el gráfico con Chart.js -->
-    <script>
-        const ctx = document.getElementById('graficoVotos').getContext('2d');
-        const graficoVotos = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: <?= json_encode($labels) ?>,
-                datasets: [{
-                    label: 'Votos por foto',
-                    data: <?= json_encode($votos) ?>,
-                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            stepSize: 1
-                        }
-                    }
-                }
-            }
-        });
-    </script>
-
-
 
     <!-- Bootstrap JS para el navbar colapsable -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Script para generar el gráfico con Chart.js importando las variables necesarias -->
+    <script>
+        const labels = <?= json_encode($labels) ?>;
+        const votos = <?= json_encode($votos) ?>;
+    </script>
+    
+    <script src="../js/grafico.js"></script>
+
+    <!-- Script que muestra el botón "volverArriba" si hay más de 2 fotos en móviles o más de 8 en escritorio -->
+    <script>
+        const numFotos = <?= count($fotosProcesadas) ?>;
+    </script>
+    <script src="../js/volverArriba.js"></script>
 
 </body>
 

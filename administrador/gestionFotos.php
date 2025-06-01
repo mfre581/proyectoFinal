@@ -10,6 +10,13 @@ require_once("../utiles/variables.php");
 require_once("../utiles/funciones.php");
 session_start();
 
+
+if (isset($_SESSION['mensaje'])) {
+    echo "<pre>Mensaje en sesión: " . htmlspecialchars($_SESSION['mensaje']) . "</pre>";
+} else {
+    echo "<pre>No hay mensaje en sesión</pre>";
+}
+
 // Verifica que el usuario es administrador, si no redirige a index
 if (!isset($_SESSION['usuario_id']) || $_SESSION['rol'] !== 'admin') {
     header("Location: ../index.php");  // Redirigimos si no tiene permiso
@@ -70,6 +77,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 // PROCESO DE ELIMINACIÓN DE FOTO
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['eliminar_id'])) {
     $foto_id = $_POST['eliminar_id'];
+
+    // Eliminamos los votos asociados a la foto
+    $deleteVotos = $conexion->prepare("DELETE FROM ip_votos WHERE foto_id = :foto_id");
+    $deleteVotos->execute(['foto_id' => $foto_id]);
 
     // Eliminamos la foto de la base de datos
     $consulta = "DELETE FROM fotografias WHERE foto_id = :foto_id";
@@ -167,7 +178,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['eliminar_id'])) {
                                                                                  para el ancla -->
 
                             <!-- Imagen de la foto subida -->
-                            <img src="<?= $foto['imagen'] ?>" alt="Foto" class="img-fluid rounded" style="width: 100%; max-width: 400px; height: auto; object-fit: cover; flex-shrink: 0;">
+                            <img src="<?= $foto['imagen'] ?>" alt="Foto" class="img-fluid rounded" style="width: 100%; max-width: 400px; height: auto; object-fit: cover; flex-shrink: 0"; loading="lazy">
 
                             <!-- Información del usuario y acciones -->
                             <div class="d-flex flex-column flex-grow-1 justify-content-between" style="min-width: 0;">
@@ -203,13 +214,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['eliminar_id'])) {
         </main>
 
         <!-- Botón para volver al principio de la página -->
-        <div class="text-center my-4">
-            <a href="#top" class="btn estiloBoton2">Subir</a>
+        <div id="btnVolverArriba" class="text-center my-4 d-none">
+            <a href="#top" class="btn btn-sm estiloBoton2">↑ Volver arriba</a>
         </div>
     </div>
 
     <!-- Bootstrap JS para el navbar colapsable -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Script que muestra el botón "volverArriba" si hay más de 2 fotos en móviles o más de 8 en escritorio -->
+    <script>
+        const numFotos = <?= count($fotosProcesadas) ?>;
+    </script>
+    <script src="../js/volverArriba.js"></script>
 
 </body>
 

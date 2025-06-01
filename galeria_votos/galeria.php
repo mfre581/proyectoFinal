@@ -7,14 +7,20 @@
  * Tras votar, si lo hacemos en otra foto, nos salta mensaje de aviso de un voto por IP
  */
 
-// Inclusión de variables y funciones 
+// Inclusión de variables,funciones y abrimos sesión
 require_once("../utiles/variables.php");
 require_once("../utiles/funciones.php");
+session_start();
+
 
 // Conectamos con la base de datos
 $conexion = conectarPDO($host, $user, $password, $bbdd);
 
-$mensaje = "";
+// Recoger mensaje de sesión si existe
+if (isset($_SESSION['mensaje'])) {
+    $mensaje = $_SESSION['mensaje'];
+    unset($_SESSION['mensaje']);  // Lo borramos para que no aparezca en próximas cargas
+}
 
 // Obtenemos las fechas de inicio y fin de votación
 $stmt = $conexion->query("SELECT fecha_votacion, fecha_fin_votacion FROM bases_concurso LIMIT 1");
@@ -70,20 +76,8 @@ $stmt->execute(['ip' => $ip_usuario]);
 $fotoVotada = $stmt->fetchColumn();
 
 
-
 // Procesamiento del voto
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-
-    // Solo se permite votar si estamos dentro del rango establecido
-    if ($fecha_actual < $fecha_votacion) {
-        $mensaje = "Lo sentimos, la votación comienza el " . date("d/m/Y", strtotime($fecha_votacion)) . ".";
-        exit();
-    }
-    if ($fecha_actual > $fecha_fin_votacion) {
-        $mensaje = "La votación finalizó el " . date("d/m/Y", strtotime($fecha_fin_votacion)) . ". No se aceptan más votos.";
-        exit();
-    }
-
 
     // Si se pulsa para desvotar
     if (isset($_POST['desvotar']) && $fotoVotada) {
@@ -96,7 +90,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $conexion->prepare("DELETE FROM ip_votos WHERE direccionIP = :ip")
             ->execute(['ip' => $ip_usuario]);
 
-        echo "<script>alert('Has cancelado tu voto. Ahora puedes votar por otra foto.'); window.location.href='galeria.php';</script>";
+        $_SESSION['mensaje'] = "Has cancelado tu voto. Ahora puedes votar por otra foto";
+
+        header("Location: galeria.php");
         exit();
     }
 
@@ -107,8 +103,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $nuevaFotoId = $_POST['fotoVotada'];
 
         if ($fotoVotada) {
+
             // Si ya se votó antes, no se permite votar de nuevo sin cancelar el anterior
-            echo "<script>alert('Solo se permite un voto por IP. Si deseas cambiar tu voto, primero debes cancelarlo.'); window.location.href='galeria.php';</script>";
+            $_SESSION['mensaje'] = "Solo se permite un voto por IP. Si deseas cambiar tu voto, primero debes cancelarlo";
+            header("Location: galeria.php");
             exit();
 
             // Si es el primer voto, se suma y se registra la IP
@@ -119,7 +117,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $conexion->prepare("INSERT INTO ip_votos (direccionIP, foto_id) VALUES (:ip, :foto_id)")
                 ->execute(['ip' => $ip_usuario, 'foto_id' => $nuevaFotoId]);
 
-            echo "<script>alert('¡Gracias por tu voto!'); window.location.href='galeria.php';</script>";
+            $_SESSION['mensaje'] = "Gracias por tu voto!";
+            header("Location: galeria.php");
             exit();
         }
     }
@@ -170,7 +169,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             </div>
         </nav>
 
-
         <!-- Contenedor principal con tarjetas -->
         <div class="container my-4">
             <?php if ($fotosProcesadas): ?>
@@ -180,9 +178,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                             <div class="card shadow-sm h-100">
 
                                 <!-- Imagen clicable para abrir modal. Se aplica clase 'ajustafoto' para
-                                 controlar tamaño y añadir pointer desde el css-->
+                                 controlar tamaño y añadir pointer desde el css, también añadimos lazy loading
+                                 para mejorar la carga de imágenes-->
                                 <img src="<?= $foto['imagen'] ?>" alt="Foto participante"
                                     class="card-img-top ajustaFoto"
+                                    loading="lazy" 
                                     data-bs-toggle="modal"
                                     data-bs-target="#modalFoto"
                                     data-foto="<?= htmlspecialchars($foto['imagen'], ENT_QUOTES) ?>"
@@ -194,6 +194,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                                     <?php if (!$votacion_activa): ?>
                                         <button class="btn btn-secondary w-100 mt-auto" disabled>Votación no disponible</button>
 
+                                    <!-- Si está activa, se muestran los botones habilitados -->  
+
                                     <?php elseif ($foto['foto_id'] == $fotoVotada): ?>
                                         <!-- Botón para cancelar voto si es la foto votada -->
                                         <form method="POST" class="mt-auto">
@@ -201,14 +203,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                                             <button type="submit" class="btn btn-danger w-100">Cancelar voto</button>
                                         </form>
 
-                                    <?php elseif ($fotoVotada): ?>
-                                        <!-- Botón activo pero bloqueado con aviso si ya se votó otra foto -->
-                                        <form class="mt-auto bloqueado" onsubmit="return mostrarAviso();">
-                                            <button type="submit" class="btn btn-primary w-100">Votar esta foto</button>
-                                        </form>
-
                                     <?php else: ?>
-                                        <!-- Botón para votar si no ha votado aún -->
+                                        <!-- Botón para votar -->
                                         <form method="POST" class="mt-auto">
                                             <input type="hidden" name="fotoVotada" value="<?= $foto['foto_id'] ?>">
                                             <button type="submit" class="btn btn-primary w-100">Votar esta foto</button>
@@ -222,58 +218,45 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             <?php else: ?>
                 <p class="text-center">No hay fotos disponibles en este momento.</p>
             <?php endif; ?>
+
+
             <!-- Botón para volver al principio de la página -->
-            <div class="text-center my-4">
-                <a href="#top" class="btn estiloBoton2">Subir</a>
+            <div id="btnVolverArriba" class="text-center my-4 d-none">
+                <a href="#top" class="btn btn-sm estiloBoton2">↑ Volver arriba</a>
             </div>
-        </div>
 
-        <!-- Modal para mostrar la foto grande -->
-        <div class="modal fade" id="modalFoto" tabindex="-1" aria-labelledby="modalFotoLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-lg">
-                <div class="modal-content bg-dark">
+            <!-- Modal para mostrar la foto grande -->
+            <div class="modal fade" id="modalFoto" tabindex="-1" aria-labelledby="modalFotoLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content bg-dark">
 
-                    <!-- Encabezado del modal con botón para cerrar -->
-                    <div class="modal-header border-0">
-                        <h5 class="modal-title text-white" id="modalFotoLabel">Foto ampliada</h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                    </div>
+                        <!-- Encabezado del modal con botón para cerrar -->
+                        <div class="modal-header border-0">
+                            <h5 class="modal-title text-white" id="modalFotoLabel">Foto ampliada</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                        </div>
 
-                    <!-- Cuerpo del modal donde se muestra la imagen ampliada -->
-                    <div class="modal-body text-center">
-                        <img src="" alt="" id="modalImagen" class="img-fluid rounded" style="max-height: 80vh; width: auto;">
+                        <!-- Cuerpo del modal donde se muestra la imagen ampliada -->
+                        <div class="modal-body text-center">
+                            <img src="" alt="" id="modalImagen" class="img-fluid rounded" style="max-height: 80vh; width: auto;">
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Bootstrap JS para la imagen del modal -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Gestión de la ampliación de la imagen en el modal -->
-    <script>
-        // Referencias al modal y a su imagen 
-        const modalFoto = document.getElementById('modalFoto');
-        const modalImagen = document.getElementById('modalImagen');
+        <!-- Bootstrap JS para la imagen del modal -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-        // Evento que se ejecuta cuando se va a mostrar el modal
-        modalFoto.addEventListener('show.bs.modal', event => {
-            const trigger = event.relatedTarget;
+        <!-- Script personalizado para manejar la ampliación de fotos en el modal -->
+        <script src="../js/modal.js"></script>
 
-            // Establece la imagen y su alt desde los atributos del elemento clicado
-            modalImagen.src = trigger.getAttribute('data-foto');
-            modalImagen.alt = trigger.getAttribute('data-alt');
-        });
-    </script>
-
-    <!-- Muestra mensaje si se intentar votar otra foto -->
-    <script>
-        function mostrarAviso() {
-            alert('Solo se permite un voto por IP. Si deseas cambiar tu voto, primero debes cancelarlo.');
-            return false;
-        }
-    </script>
+        <!-- Script que muestra el botón "volverArriba" si hay más de 2 fotos en móviles o más de 8 en escritorio -->
+        <script>
+            const numFotos = <?= count($fotosProcesadas) ?>;
+        </script>
+        <script src="../js/volverArriba.js"></script>
 </body>
 
 </html>

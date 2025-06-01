@@ -232,7 +232,7 @@ $fotosPorSubir = $numMaxImagenes - $numImagenes;
 
 
   <!-- JS externo que gestiona canvas y filtros-->
-  <script src="filtros.js"></script>
+  <script src="../js/filtros.js"></script>
 
   <!-- Bootstrap JS para el navbar colapsable -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

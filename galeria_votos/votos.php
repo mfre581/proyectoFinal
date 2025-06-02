@@ -89,7 +89,7 @@ foreach ($fotosProcesadas as $foto) {
             </div>
         </nav>
 
-        <div class="container my-4">
+        <main class="container my-4">
             <!-- Galería de fotos con votos -->
             <?php if ($fotosProcesadas): ?>
                 <div class="row g-4 justify-content-center">
@@ -99,7 +99,7 @@ foreach ($fotosProcesadas as $foto) {
 
                                 <!-- 'card-img-top' clase bootsdtrap, posiciona la imagen en la parte superior de la tarjeta
                                 'ajustaFoto2' es la clase personalizada que controla el tamaño de la imagen en el css (sin pointer)-->
-                                <img src="<?= $foto['imagen'] ?>" class="card-img-top ajustaFoto2" alt="Foto <?= $foto['foto_id'] ?>" loading="lazy">
+                                <img src="<?= $foto['imagen'] ?>" class="card-img-top ajustaFoto2" alt="Foto de <?= ($foto['nombre'] . ' ' . $foto['apellido']) ?>, con <?= ($foto['votos']) ?> votos" loading="lazy">
 
                                 <div class="card-body text-center d-flex flex-column">
                                     <p class="card-text mb-1 fw-semibold">
@@ -132,7 +132,7 @@ foreach ($fotosProcesadas as $foto) {
                 <a href="#top" class="btn btn-sm estiloBoton2">↑ Volver arriba</a>
             </div>
 
-        </div>
+        </main>
     </div>
 
     <!-- Bootstrap JS para el navbar colapsable -->

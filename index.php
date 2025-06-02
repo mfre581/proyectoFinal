@@ -9,7 +9,7 @@
 require_once("./utiles/variables.php");
 require_once("./utiles/funciones.php");
 
-// Conexión a la base de datos mediante PDO
+// Conexión a la base de datos 
 $conexion = conectarPDO($host, $user, $password, $bbdd);
 
 // Obtiene las bases del concurso desde la base de datos
@@ -74,7 +74,7 @@ if (isset($_GET['intentoRegistro'])) {
         <nav class="navbar navbar-expand-lg navbar-dark">
             <div class="container">
                 <!-- Título destacado del sitio -->
-                <span class="navbar-brand fs-1 fw-bold mx-auto">Retales Urbanos</span>
+                <h1 class="navbar-brand fs-1 fw-bold mx-auto">Retales Urbanos</h1>
 
                 <!-- Botón para móviles (hamburguesa) -->
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -104,7 +104,7 @@ if (isset($_GET['intentoRegistro'])) {
         <div class="container mb-4">
             <div class="card shadow-sm overflow-hidden">
                 <!-- Imagen con altura máxima limitada para evitar que ocupe demasiado espacio -->
-                <img src="./img/fotoPortada.jpg" alt="imagen"
+                <img src="./img/fotoPortada.jpg" alt="Imagen de portada de un gato en la calle al atardecer"
                     style="max-height: 400px; object-fit: cover;">
             </div>
         </div>
@@ -140,7 +140,7 @@ if (isset($_GET['intentoRegistro'])) {
 
             <!-- Botón para volver al principio de la página -->
             <div class="text-center my-4">
-                <a href="#top" class="btn estiloBoton2">Subir</a>
+                <a href="#top" class="btn estiloBoton2" aria-label="Volver al inicio de la página">↑ Volver arriba</a>
             </div>
         </div>
     </div>

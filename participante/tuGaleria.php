@@ -107,16 +107,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['eliminar_id'])) {
 
         <div class="container">
 
-            <main class="container my-5">
+            <main class="container my-5" role="main">
 
-                <!-- Galería de fotos si hay imágenes disponibles -->
+                <!-- Galería de fotos del participante -->
                 <?php if ($fotosProcesadas): ?>
                     <div class="row g-4 justify-content-center">
                         <?php foreach ($fotosProcesadas as $foto): ?>
                             <div class="col-12 col-sm-6 col-md-4 col-lg-3">
                                 <div class="card shadow-sm h-100 text-center">
                                     <!-- Imagen de la foto con activador de modal al hacer clic -->
-                                    <img src="<?= $foto['imagen'] ?>" alt="Foto subida"
+                                    <img src="<?= $foto['imagen'] ?>" alt="Fotografía subida por el usuario"
                                         class="card-img-top ajustaFoto"
                                         loading="lazy"
                                         data-bs-toggle="modal"
@@ -132,7 +132,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['eliminar_id'])) {
                                         <!-- Botón para eliminar foto con confirmación -->
                                         <form method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar esta foto?');">
                                             <input type="hidden" name="eliminar_id" value="<?= $foto['foto_id'] ?>">
-                                            <button type="submit" class="btn btn-sm btn-outline-danger mt-2">Eliminar</button>
+                                            <button type="submit" class="btn btn-sm btn-outline-danger mt-2" aria-label="Eliminar la foto con ID">Eliminar</button>
                                         </form>
                                     </div>
                                 </div>
@@ -148,7 +148,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['eliminar_id'])) {
                 <?php if (count($fotosProcesadas) > 2): ?>
                     <!-- Botón visible solo en móviles si hay más de 2 fotos -->
                     <div class="text-center my-4 d-block d-md-none">
-                        <a href="#top" class="btn btn-sm estiloBoton2">↑ Volver arriba</a>
+                        <a href="#top" class="btn btn-sm estiloBoton2" aria-label="Volver al principio de la página">↑ Volver arriba</a>
                     </div>
                 <?php endif; ?>
         </div>
@@ -166,7 +166,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['eliminar_id'])) {
 
                     <!-- Cuerpo del modal donde se muestra la imagen ampliada -->
                     <div class="modal-body text-center">
-                        <img src="" alt="" id="modalImagen" class="img-fluid rounded" style="max-height: 80vh; width: auto;">
+                        <img src="" alt="Vista ampliada de la fotografía seleccionada" id="modalImagen" class="img-fluid rounded" style="max-height: 80vh; width: auto;">
                     </div>
                 </div>
             </div>

@@ -6,12 +6,12 @@
 	$password = "pepito01";
 	//$bbdd = "Plataformadb";// Clase
 	$bbdd = "proyecto";// Casa
-/*	
+/*
 	//byethost
-	$host = "sql204.byethost9.com"; // El host de MySQL (te lo da ByetHost)
-	$user = "b9_38835195";          // Tu nombre de usuario de MySQL (también te lo da ByetHost)
-	$password = "velazquez41002";        // Tu contraseña de MySQL (la que se proporciona en el correo)
-	$bbdd = "b9_38835195_rallybd"; // El nombre de la base de datos que creaste en cPanel
+	$host = "sql205.byethost31.com"; // El host de MySQL (te lo da ByetHost)
+	$user = "b31_39142608";          // Tu nombre de usuario de MySQL (también te lo da ByetHost)
+	$password = "polopoplo99";        // Tu contraseña de MySQL (la que se proporciona en el correo)
+	$bbdd = "b31_39142608_retalesUrbano"; // El nombre de la base de datos que creaste en cPanel
 
 	// XAMMP
 	$host = "localhost";
@@ -22,6 +22,7 @@
 	$conn = new mysqli($host, $user, $password, $bbdd);
 
 
+
 	//infinityfree
 	$host = "sql212.infinityfree.com";
 	$user = "if0_39059633";          
@@ -29,7 +30,6 @@
 	$bbdd = "if0_39059633_rallybd2"; 
 
 */
-
 
 
 	

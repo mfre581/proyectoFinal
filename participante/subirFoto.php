@@ -207,18 +207,18 @@ $fotosPorSubir = $numMaxImagenes - $numImagenes;
 
           <!-- Canvas para previsualizar -->
           <div class="d-flex justify-content-center mb-3">
-            <canvas id="previewCanvas" width="600" height="400" class="border bg-white"></canvas>
+            <canvas id="previewCanvas" width="600" height="400" class="border bg-white" role="img"></canvas>
           </div>
 
           <!-- Botones de filtros -->
           <div class="d-flex justify-content-center gap-2 flex-column">
-            <button type="button" class="btn btn-outline-dark" onclick="applyFilter('original')">Original</button>
-            <button type="button" class="btn btn-outline-info" onclick="applyFilter('brightness')">Brillo</button>
-            <button type="button" class="btn btn-outline-success" onclick="applyFilter('contrast')">Contraste</button>
-            <button type="button" class="btn btn-outline-danger" onclick="applyFilter('redTint')">Tono rojizo</button>
-            <button type="button" class="btn btn-outline-secondary" onclick="applyFilter('grayscale')">Blanco y negro</button>
-            <button type="button" class="btn btn-outline-warning" onclick="applyFilter('sepia')">Sepia</button>
-            <button type="button" class="btn btn-outline-primary" onclick="applyFilter('invert')">Invertir colores</button>
+            <button type="button" class="btn btn-outline-dark" onclick="applyFilter('original')" aria-label="Aplicar estilo original">Original</button>
+            <button type="button" class="btn btn-outline-info" onclick="applyFilter('brightness')" aria-label="Aplicar filtro de brillo">Brillo</button>
+            <button type="button" class="btn btn-outline-success" onclick="applyFilter('contrast')" aria-label="Aplicar filtro de contraste">Contraste</button>
+            <button type="button" class="btn btn-outline-danger" onclick="applyFilter('redTint')" aria-label="Aplicar filtro rojizo">Tono rojizo</button>
+            <button type="button" class="btn btn-outline-secondary" onclick="applyFilter('grayscale')" aria-label="Aplicar filtro de blanco y negro">Blanco y negro</button>
+            <button type="button" class="btn btn-outline-warning" onclick="applyFilter('sepia')" aria-label="Aplicar filtro sepia">Sepia</button>
+            <button type="button" class="btn btn-outline-primary" onclick="applyFilter('invert')" aria-label="Aplicar filtro de invertir colores">Invertir colores</button>
           </div>
         </div>
         <div class="text-center my-2">

@@ -5,20 +5,22 @@
 * Realiza validaciones básicas y guarda el usuario en la base de datos.
 */
 
-// Incluye las variables de conexión y funciones reutilizables
+// Inclusión de variables,funciones y abrimos sesión
 require_once("../utiles/variables.php");
 require_once("../utiles/funciones.php");
-
 session_start();
 
+// Conexión a la base de datos 
 $conexion = conectarPDO($host, $user, $password, $bbdd);
 
+// Iniciamos variables
 $errores = [];
 $email = $_POST["email"] ?? "";
 $contrasena = $_POST["password"] ?? "";
 $nombre = $_POST["nombre"] ?? "";
 $apellido = $_POST["apellido"] ?? "";
 
+// Recibimos el formulario
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Validar nombre

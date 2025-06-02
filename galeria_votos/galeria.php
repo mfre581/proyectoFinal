@@ -141,7 +141,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <body class="bg-light d-flex justify-content-center align-items-center min-vh-100 fondo1">
 
     <!-- Contenedor principal en forma de tarjeta -->
-    <div class="card shadow p-4" style="max-width: 900px; width: 100%;">
+    <main class="card shadow p-4" style="max-width: 900px; width: 100%;">
 
         <?php if (!empty($mensaje)): ?>
             <div class="alert alert-warning text-center mt-3">
@@ -182,7 +182,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                                  para mejorar la carga de imágenes-->
                                 <img src="<?= $foto['imagen'] ?>" alt="Foto participante"
                                     class="card-img-top ajustaFoto"
-                                    loading="lazy" 
+                                    loading="lazy"
                                     data-bs-toggle="modal"
                                     data-bs-target="#modalFoto"
                                     data-foto="<?= htmlspecialchars($foto['imagen'], ENT_QUOTES) ?>"
@@ -194,7 +194,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                                     <?php if (!$votacion_activa): ?>
                                         <button class="btn btn-secondary w-100 mt-auto" disabled>Votación no disponible</button>
 
-                                    <!-- Si está activa, se muestran los botones habilitados -->  
+                                        <!-- Si está activa, se muestran los botones habilitados -->
 
                                     <?php elseif ($foto['foto_id'] == $fotoVotada): ?>
                                         <!-- Botón para cancelar voto si es la foto votada -->
@@ -244,7 +244,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 </div>
             </div>
         </div>
-
+    </main>
 
         <!-- Bootstrap JS para la imagen del modal -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

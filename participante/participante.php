@@ -62,7 +62,7 @@ $usuario_id = $_SESSION['usuario_id'];
         </nav>
 
         <!-- Contenido principal -->
-        <div class="container mt-4">
+        <main class="container mt-4">
             <div class="text-center">
                 <h3 class="mb-4">¿Qué deseas hacer?</h3>
 
@@ -72,7 +72,7 @@ $usuario_id = $_SESSION['usuario_id'];
                     <a href="./tuGaleria.php" class="btn btn-warning btn-lg">Ir a tu galería</a>
                 </div>
             </div>
-        </div>
+        </main>
     </div>
 
 </body>

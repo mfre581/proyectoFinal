@@ -55,6 +55,7 @@ $bbdd   = "retales_urbanos_bd";
 $conn = new mysqli($host, $user, $password, $bbdd);
 
 
+
 4. Probar la aplicación
 - Abre el navegador y navega a http://localhost/tu_carpeta_de_app (reemplaza tu_carpeta_de_app con el nombre de la carpeta donde pusiste los archivos).
 - Verifica que la aplicación carga sin errores y que puedes interactuar con la base de datos (por ejemplo, registrarte, subir fotos, votar, etc.).

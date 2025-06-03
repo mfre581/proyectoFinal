@@ -20,11 +20,13 @@ Requisitos previos:
 - Un equipo con sistema operativo Windows, macOS o Linux.
 - Conexión a internet para descargar XAMPP.
 
+
 1. Descargar e instalar XAMPP
 - Accede a la página oficial de XAMPP: https://www.apachefriends.org/es/index.html
 - Descarga la versión adecuada para tu sistema operativo.
 - Ejecuta el instalador y sigue las instrucciones. Puedes dejar la configuración por defecto.
 - Una vez instalado, abre el Panel de control de XAMPP y arranca los servicios de Apache y MySQL.
+
 
 2. Configurar la base de datos
 - Abre tu navegador y ve a http://localhost/phpmyadmin.
@@ -33,10 +35,12 @@ Requisitos previos:
 - Escribe retales_urbanos_bd en el campo de nombre y haz clic en “Crear”.
 (Opcional: si tienes un archivo .sql con la estructura y datos, importa la base de datos usando la pestaña “Importar”.)
 
+
 3. Configurar la aplicación
 - Copia los archivos de la aplicación en la carpeta htdocs de XAMPP.
 - En Windows suele estar en C:\xampp\htdocs\
 - En macOS/Linux, en /opt/lampp/htdocs/ o similar.
+
 
 Asegúrate de que en el archivo variables.php tienes estos parámetros:
 
@@ -54,6 +58,7 @@ $conn = new mysqli($host, $user, $password, $bbdd);
 4. Probar la aplicación
 - Abre el navegador y navega a http://localhost/tu_carpeta_de_app (reemplaza tu_carpeta_de_app con el nombre de la carpeta donde pusiste los archivos).
 - Verifica que la aplicación carga sin errores y que puedes interactuar con la base de datos (por ejemplo, registrarte, subir fotos, votar, etc.).
+
 
 Notas adicionales
 - Si quieres modificar la configuración de PHP o Apache, usa el panel de XAMPP para abrir los archivos de configuración.

@@ -40,15 +40,15 @@ Requisitos previos:
 
 Asegúrate de que en el archivo variables.php tienes estos parámetros:
 
-4. Probar la aplicación
-Abre el navegador y navega a http://localhost/tu_carpeta_de_app (reemplaza tu_carpeta_de_app con el nombre de la carpeta donde pusiste los archivos).
 $host = "localhost";
 $user = "root";   // Usuario por defecto en XAMPP
 $password = "";   // Sin contraseña por defecto en XAMPP
 $bbdd   = "retales_urbanos_bd";
 $conn = new mysqli($host, $user, $password, $bbdd);
 
-Verifica que la aplicación carga sin errores y que puedes interactuar con la base de datos (por ejemplo, registrarte, subir fotos, votar, etc.).
+4. Probar la aplicación
+- Abre el navegador y navega a http://localhost/tu_carpeta_de_app (reemplaza tu_carpeta_de_app con el nombre de la carpeta donde pusiste los archivos).
+- Verifica que la aplicación carga sin errores y que puedes interactuar con la base de datos (por ejemplo, registrarte, subir fotos, votar, etc.).
 
 Notas adicionales
 - Si quieres modificar la configuración de PHP o Apache, usa el panel de XAMPP para abrir los archivos de configuración.

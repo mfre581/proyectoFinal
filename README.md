@@ -68,37 +68,69 @@ Notas adicionales
 ## Estructura
 
 index.php                    Página principal de la aplicación
+
 utiles/
+
   funciones.php              Funciones reutilizables en todo el proyecto
+  
   variables.php              Variables de configuración, como conexión a la BD
+  
 registro/
+
   registro.php               Formulario y lógica para registrar nuevos usuarios
+  
 participante/
+
   participante.php           Página principal del usuario participante
+  
   subirFoto.php              Funcionalidad para subir fotografías
+  
   tuGaleria.php              Muestra las fotos subidas por el usuario
+  
 login/
+
   login.php                  Página de inicio de sesión
+  
 js/
+
   filtros.js                 Scripts para aplicar filtros en la galería
+  
   graficos.js                Generación de gráficos estadísticos
+  
   modal.js                   Ampliación de imágenes con modal
+  
   volverArriba.js            Gestiona lógica de botón de volver arriba
+  
 img/                         Carpeta con las imágenes usadas en el sitio
+
 galeria_votos/
+
   galeria.php                Galería pública de fotografías para votar
+  
   votos.php                  Muestra detalles de fotos y gráfico de votaciones
+  
 css/
+
   estilos.css                Hoja de estilos que aplica el sitio 
+  
 cerrarSesion/
+
   cerrar_sesion.php          Cierra la sesión del usuario
+  
 administrador/
+
   administrador.php          Panel principal del administrador
+  
   editar.php                 Edición de datos de usuarios
+  
   gestionBases.php           Gestión de las reglas del concurso
+  
   gestionFotos.php           Gestión de fotos subidas por los participantes
+  
   gestionUsuarios.php        Gestión de usuarios registrados
+  
   nuevo.php                  Añadir nuevos usuarios
+  
 
 ## Autoría
 Desarrollado por Michel Freymann como proyecto final del grado superior DAW.

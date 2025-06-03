@@ -101,7 +101,7 @@ js/
   
   volverArriba.js ->           Gestiona lógica de botón de volver arriba
   
-img/                         Carpeta con las imágenes usadas en el sitio
+img/ ->                        Carpeta con las imágenes usadas en el sitio
 
 galeria_votos/
 

@@ -4,8 +4,8 @@ require_once("../utiles/variables.php");
 require_once("../utiles/funciones.php");
 session_start();
 
-// Verifica que el usuario es administrador, si no redirige a index
-if (!isset($_SESSION['usuario_id']) || $_SESSION['rol'] !== 'admin') {
+// Verifica que el usuario está logueado, si no redirige a index
+if (!isset($_SESSION['usuario_id'])) {
     header("Location: ../index.php");
     exit();
 }
@@ -85,13 +85,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (empty($errores)) {
         try {
-            if (!empty($password)) {
+            if (!empty($contrasena)) {
                 // Si se ha ingresado una nueva contraseña, se hashea y se actualiza la tabla
-                $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+                $passwordHash = password_hash($contrasena, PASSWORD_DEFAULT);
                 $sql = "UPDATE usuarios SET nombre = :nombre, apellido = :apellido, email = :email, password = :password, updated_at = NOW() WHERE usuario_id = :id";
             } else {
-                $sql = "UPDATE usuarios SET nombre = :nombre, apellido = :apellido, email = :email, updated_at = NOW() WHERE usuario_id = :id
-";
+                $sql = "UPDATE usuarios SET nombre = :nombre, apellido = :apellido, email = :email, updated_at = NOW() WHERE usuario_id = :id";
             }
             $stmt = $conexion->prepare($sql);
             $stmt->bindParam(':nombre', $nombre, PDO::PARAM_STR);
@@ -100,12 +99,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->bindParam(':id', $usuario_id, PDO::PARAM_INT);
 
             // Si se ha ingresado una nueva contraseña, se incluye en el update correspondiente
-            if (!empty($password)) {
+            if (!empty($contrasena)) {
                 $stmt->bindParam(':password', $passwordHash, PDO::PARAM_STR);
             }
 
-            if ($stmt->execute($param)) {
-                echo "<script>alert('Usuario actualizado correctamente.'); window.location.href='gestionUsuarios.php';</script>";
+            // Ejecutar la consulta
+            if ($stmt->execute()) {
+                // Obtener el rol del usuario actualizado
+                $rol = $_SESSION['rol'] ?? null;
+                // Si no tienes el rol en sesión, puedes obtenerlo de la BD
+                if (!$rol) {
+                    $stmtRol = $conexion->prepare("SELECT rol FROM usuarios WHERE usuario_id = :id");
+                    $stmtRol->execute([':id' => $usuario_id]);
+                    $rol = $stmtRol->fetchColumn();
+                }
+
+                // Redireccionar según rol
+                if ($rol === 'participante') {
+                    echo "<script>alert('Usuario actualizado correctamente.'); window.location.href='../participante/participante.php';</script>";
+                } else {
+                    // admin u otros roles
+                    echo "<script>alert('Usuario actualizado correctamente.'); window.location.href='gestionUsuarios.php';</script>";
+                }
                 exit();
             } else {
                 $errores[] = "Error al actualizar el usuario.";

@@ -70,6 +70,8 @@ $usuario_id = $_SESSION['usuario_id'];
                 <div class="d-grid gap-3 col-12 col-sm-10 col-md-8 col-lg-6 mx-auto">
                     <a href="./subirFoto.php" class="btn btn-primary btn-lg">Añadir una fotografía</a>
                     <a href="./tuGaleria.php" class="btn btn-warning btn-lg">Ir a tu galería</a>
+                    <!-- Enviamos a la página de editar con el id -->
+                    <a href="../administrador/editar.php?usuario_id=<?= $usuario_id ?>" class="btn btn-success btn-lg">Modificar tus datos</a>
                 </div>
             </div>
         </main>

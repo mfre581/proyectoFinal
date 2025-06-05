@@ -11,12 +11,6 @@ require_once("../utiles/funciones.php");
 session_start();
 
 
-if (isset($_SESSION['mensaje'])) {
-    echo "<pre>Mensaje en sesión: " . htmlspecialchars($_SESSION['mensaje']) . "</pre>";
-} else {
-    echo "<pre>No hay mensaje en sesión</pre>";
-}
-
 // Verifica que el usuario es administrador, si no redirige a index
 if (!isset($_SESSION['usuario_id']) || $_SESSION['rol'] !== 'admin') {
     header("Location: ../index.php");  // Redirigimos si no tiene permiso

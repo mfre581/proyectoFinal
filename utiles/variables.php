@@ -6,6 +6,7 @@
 	$password = "pepito01";
 	//$bbdd = "Plataformadb";// Clase
 	$bbdd = "proyecto";// Casa
+
 /*
 	//byethost
 	$host = "sql205.byethost31.com"; // El host de MySQL (te lo da ByetHost)
@@ -30,6 +31,7 @@
 	$bbdd = "if0_39059633_rallybd2"; 
 
 */
+
 
 
 	

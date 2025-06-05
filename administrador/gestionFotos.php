@@ -112,12 +112,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['eliminar_id'])) {
 </head>
 
 <!-- Establece el estilo general de la página -->
-
-<body class="bg-light d-flex justify-content-center align-items-center min-vh-100 fondo2">
+<body class="bg-light fondo2">
 
     <!-- Contenedor principal en forma de tarjeta -->
-    <div class="card shadow p-4" style="max-width: 780px; width: 100%;">
-
+    <div class="card shadow p-4 mx-auto w-100" style="max-width: 780px;">
+ 
         <!-- Barra de navegación-->
         <nav class="navbar navbar-dark navbar-expand-lg">
             <div class="container">

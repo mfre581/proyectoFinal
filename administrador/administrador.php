@@ -64,7 +64,7 @@ $nombre = $consulta->fetchColumn();
         <!-- Contenido principal, donde el administrador puede escoger entre diferentes opciones -->
         <main class="container my-5">
             <h3 class="mb-5">Elige qué deseas hacer</h3>
-            <div class="d-grid gap-3 col-6 mx-auto">
+            <div class="d-grid gap-3 col-12 col-sm-10 col-md-8 col-lg-6 mx-auto">
                 <a href="./gestionFotos.php" class="btn btn-primary btn-lg">Gestionar estado de fotografías</a>
                 <a href="./gestionUsuarios.php" class="btn btn-success btn-lg">Gestionar usuarios</a>
                 <a href="./gestionBases.php" class="btn btn-warning btn-lg">Modificar bases del concurso</a>

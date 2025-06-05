@@ -194,7 +194,14 @@ $fotosPorSubir = $numMaxImagenes - $numImagenes;
 
       <!-- Indicadores de bases -->
       <h5 class="m-4 text-center">Tamaño máximo <?= $maxMB ?> MB</h5>
-      <h5 class="m-4 text-center">Fotos que aún puedes subir: <?= $fotosPorSubir ?></h5>
+
+      <h5 class="m-4 text-center"> <!-- Muestra fotos que aún se pueden subir, si es 0 muestra mensaje -->
+        <?php if ($fotosPorSubir > 0): ?>
+          Fotos que puedes subir: <?= $fotosPorSubir ?>
+        <?php else: ?> 
+          <strong>Has alcanzado el máximo de fotos permitidas</strong>
+        <?php endif; ?>
+      </h5>
 
       <!-- Formulario para subir la imagen -->
       <form id="formulario" action="" method="post" class="mb-4">

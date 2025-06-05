@@ -147,7 +147,8 @@ $usuarios = $stmt_usuarios->fetchAll();
                                         <a href="editar.php?usuario_id=<?= $usuario['usuario_id'] ?>" class="btn btn-primary btn-sm me-2">Editar</a>
                                         <?php if ($usuario['usuario_id'] == $usuario_id_sesion): ?>
                                             <!-- Se deshabilita la opción de eliminar para el administrador actual para no generar una paradoja espacio-temporal-->
-                                            <button class="btn btn-danger btn-sm" disabled>Eliminar</button>
+                                            <button class="btn btn-danger btn-sm" 
+                                            disabled>Eliminar</button>
                                         <?php else: ?>
                                             <a href="gestionUsuarios.php?eliminar_id=<?= $usuario['usuario_id'] ?>"
                                                 onclick="return confirm('¿Estás seguro de que deseas eliminar este usuario y su galería?');"

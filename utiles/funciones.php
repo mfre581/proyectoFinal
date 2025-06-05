@@ -1,7 +1,5 @@
 <?php
 	
-  
-
 /**
  * FUNCIÓN QUE CONECTA CON BBDD
  */

@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nombre = $_POST['nombre'] ?? '';
     $apellido = $_POST['apellido'] ?? '';
     $email = $_POST['email'] ?? '';
-    $password = $_POST['password'] ?? '';
+    $contrasena = $_POST['password'] ?? '';
 
     // Validaciones para que no se pueda actualizar al usario con datos vacíos o en formato erróneo
     if (empty($nombre)) {
@@ -69,9 +69,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Si hay contraseña, validarla
-    if (!empty($password)) {
-        if (strlen($password) < 5 || strlen($password) > 20) {
+    if (!empty($contrasena)) {
+        if (empty($contrasena)) {
+            $errores[] = "La contraseña es obligatoria.";
+        } elseif (strlen($contrasena) < 5 || strlen($contrasena) > 20) {
             $errores[] = "La contraseña debe tener entre 5 y 20 caracteres.";
+        } elseif (!preg_match('/[A-Z]/', $contrasena)) {
+            $errores[] = "La contraseña debe contener al menos una letra mayúscula.";
+        } elseif (!preg_match('/[a-z]/', $contrasena)) {
+            $errores[] = "La contraseña debe contener al menos una letra minúscula.";
+        } elseif (!preg_match('/\d/', $contrasena)) {
+            $errores[] = "La contraseña debe contener al menos un número.";
         }
     }
 
@@ -174,6 +182,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="mb-3">
                     <label for="password" class="form-label">Nueva contraseña (opcional):</label>
                     <input type="password" name="password" id="password" class="form-control" placeholder="Dejar vacío para no cambiar">
+                    <div class="form-text">Mínimo 5 caracteres, mayúscula, minúscula y número</div>
                 </div>
                 <div class="d-grid">
                     <button type="submit" class="btn btn-primary">Guardar cambios</button>

@@ -128,6 +128,7 @@ if (isset($_GET['intentoRegistro'])) {
                 <!-- Datos de la consulta sobre las bases del concurso -->
                 <p><strong>Máximo de fotos por persona:</strong> <?= $bases['max_fotos'] ?></p>
                 <p><strong>Tamaño máximo de foto:</strong> <?= $bases['max_tamano_mb'] ?> MB</p>
+                <p><strong>Formatos admitidos:</strong> JPEG / PNG</p>
                 <p><strong>Inicio de participación:</strong> <?= $bases['fecha_inicio'] ?></p>
                 <p><strong>Fin de participación:</strong> <?= $bases['fecha_fin'] ?></p>
                 <p><strong>Inicio de votaciones:</strong> <?= $bases['fecha_votacion'] ?></p>

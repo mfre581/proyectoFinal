@@ -21,7 +21,7 @@ $conexion = conectarPDO($host, $user, $password, $bbdd);
 // Iniciamos variables
 $errores = [];
 $email = $_POST["email"] ?? "";
-$clave = $_POST["password"] ?? "";
+$contrasena = $_POST["password"] ?? "";
 $nombre = $_POST["nombre"] ?? "";
 $apellido = $_POST["apellido"] ?? "";
 $rol = $_POST["rol"] ?? "";
@@ -59,17 +59,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     // Validar contraseña 
-    if (empty($clave)) {
+    if (empty($contrasena)) {
         $errores[] = "La contraseña es obligatoria.";
-    } elseif (strlen($clave) < 5 || strlen($clave) > 20) {
+    } elseif (strlen($contrasena) < 5 || strlen($contrasena) > 20) {
         $errores[] = "La contraseña debe tener entre 5 y 20 caracteres.";
+    } elseif (!preg_match('/[A-Z]/', $contrasena)) {
+        $errores[] = "La contraseña debe contener al menos una letra mayúscula.";
+    } elseif (!preg_match('/[a-z]/', $contrasena)) {
+        $errores[] = "La contraseña debe contener al menos una letra minúscula.";
+    } elseif (!preg_match('/\d/', $contrasena)) {
+        $errores[] = "La contraseña debe contener al menos un número.";
     }
 
     // Si no hay errores, insertar usuario
     if (empty($errores)) {
         try {
             // Hashear la contraseña
-            $passwordHash = password_hash($clave, PASSWORD_DEFAULT);
+            $passwordHash = password_hash($contrasena, PASSWORD_DEFAULT);
 
             // Preparar la consulta de inserción
             $insert = "INSERT INTO usuarios (nombre, apellido, email, rol, password, created_at, updated_at)
@@ -172,6 +178,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <div class="mb-3">
                     <label for="password" class="form-label">Contraseña:</label>
                     <input type="password" name="password" id="password" class="form-control">
+                    <div class="form-text">Mínimo 5 caracteres, mayúscula, minúscula y número</div>
                 </div>
 
                 <div class="d-grid">

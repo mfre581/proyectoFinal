@@ -60,6 +60,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $errores[] = "La contraseña es obligatoria.";
     } elseif (strlen($contrasena) < 5 || strlen($contrasena) > 20) {
         $errores[] = "La contraseña debe tener entre 5 y 20 caracteres.";
+    } elseif (!preg_match('/[A-Z]/', $contrasena)) {
+        $errores[] = "La contraseña debe contener al menos una letra mayúscula.";
+    } elseif (!preg_match('/[a-z]/', $contrasena)) {
+        $errores[] = "La contraseña debe contener al menos una letra minúscula.";
+    } elseif (!preg_match('/\d/', $contrasena)) {
+        $errores[] = "La contraseña debe contener al menos un número.";
     }
 
 
@@ -116,7 +122,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <!-- Barra de navegación-->
         <nav class="navbar navbar-dark navbar-expand-lg">
             <div class="container">
-        
+
                 <span class="navbar-brand fs-4 fw-bold">Introduce tus datos</span>
 
                 <!-- Botón hamburguesa para móviles -->
@@ -137,7 +143,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <!-- Contenido de la tarjeta -->
         <div class="mt-4">
 
-     
+
             <!-- Mostrar errores si existen -->
             <?php if (!empty($errores)) : ?>
                 <div class="alert alert-danger" role="alert">
@@ -169,7 +175,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <div class="mb-3">
                     <label for="password" class="form-label">Contraseña:</label>
                     <input type="password" class="form-control" name="password" id="password">
-                    <div class="form-text">Debe tener entre 5 y 20 caracteres.</div>
+                    <div class="form-text">Mínimo 5 caracteres, mayúscula, minúscula y número</div>
                 </div>
                 <button type="submit" class="btn btn-primary w-100">Registrarse</button>
             </form>
